@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0054)file:///C:/Users/100nout/Downloads/payment_app_v2.html -->
+<!-- saved from url=(0056)file:///C:/Users/100nout/Downloads/payment_app_v3_1.html -->
 <html lang="ru" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Meduza Crystal — Платежи</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="./Meduza Crystal — Платежи_files/telegram-web-app.js.Без названия"></script>
 <link rel="stylesheet" href="./Meduza Crystal — Платежи_files/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -82,6 +82,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .empty i{font-size:40px;display:block;margin-bottom:12px;opacity:.4}
 .empty-title{font-size:16px;font-weight:500;margin-bottom:6px;color:var(--text)}
 .empty-sub{font-size:14px}
+.loader{text-align:center;padding:48px 24px;color:var(--text2)}
+.loader i{font-size:32px;display:block;margin-bottom:8px;animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .cal-month{font-size:17px;font-weight:600}
 .cal-nav-btn{background:var(--bg2);border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text)}
@@ -123,10 +126,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .sheet-btn.save{background:var(--text);color:var(--bg)}
 .sheet-btn.del{background:var(--red-bg);color:var(--red-text)}
 .sheet-btn:active{opacity:.75}
+.sheet-btn:disabled{opacity:.5;cursor:not-allowed}
 .extend-sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:16px 20px max(24px,env(safe-area-inset-bottom))}
 .progress-bar{height:4px;background:var(--bg3);border-radius:2px;margin:6px 0 12px;overflow:hidden}
 .progress-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .3s}
-.months-info{font-size:13px;color:var(--text2);margin-top:4px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:20px;font-size:14px;font-weight:500;z-index:300;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.sync-indicator{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);margin-bottom:12px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.sync-dot.loading{background:var(--amber);animation:pulse .8s infinite}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 </style>
 </head>
 <body>
@@ -134,7 +144,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   <div class="header">
     <div class="header-top">
       <div class="header-title">💳 Платежи</div>
-      <span id="header-month" style="font-size:13px;color:var(--text2)">Июнь 2026</span>
+      <span id="header-month" style="font-size:13px;color:var(--text2)"></span>
     </div>
     <div class="header-sub">Meduza Crystal</div>
   </div>
@@ -145,136 +155,32 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   </div>
   <div class="content">
     <div id="tab-home">
-      <div class="stats-row" id="stats">
-    <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">1&nbsp;170 р.</div></div>
-    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">0/3</div></div>
-    <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:var(--red)">2</div></div></div>
+      <div class="sync-indicator"><div class="sync-dot error" id="sync-dot"></div><span id="sync-text">Ошибка подключения</span></div>
+      <div class="stats-row" id="stats"></div>
       <div class="section-header">
         <span class="section-title">Этот месяц</span>
         <button class="add-btn" onclick="openAdd()"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
       </div>
-      <div class="payment-list" id="home-list"><div class="payment-card overdue">
-    <div class="day-circle overdue">5</div>
-    <div class="payment-info">
-      <div class="payment-name">Аренда павильона</div>
-      <div class="payment-meta">Аренда · пр-т Независимости</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;1&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;1&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;1&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;1&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">850 р.</div>
-      <span class="badge overdue">Просрочен</span>
-    </div>
-  </div><div class="payment-card overdue">
-    <div class="day-circle overdue">15</div>
-    <div class="payment-info">
-      <div class="payment-name">Реклама Instagram</div>
-      <div class="payment-meta">Реклама · таргет</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 3 мес.</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;3&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;3&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;3&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;3&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">200 р.</div>
-      <span class="badge overdue">Просрочен</span>
-    </div>
-  </div><div class="payment-card soon">
-    <div class="day-circle soon">22</div>
-    <div class="payment-info">
-      <div class="payment-name">Налог УСН</div>
-      <div class="payment-meta">Налоги</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;2&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;2&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;2&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;2&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">120 р.</div>
-      <span class="badge soon">Скоро</span>
-    </div>
-  </div></div>
+      <div class="payment-list" id="home-list"><div class="empty"><i class="ti ti-wifi-off"></i><div class="empty-title">Нет подключения</div><div class="empty-sub">Проверьте интернет и обновите</div></div></div>
     </div>
     <div id="tab-list" style="display:none">
       <div class="section-header">
         <span class="section-title">Все платежи</span>
         <button class="add-btn" onclick="openAdd()"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
       </div>
-      <div class="payment-list" id="all-list"><div class="payment-card overdue">
-    <div class="day-circle overdue">5</div>
-    <div class="payment-info">
-      <div class="payment-name">Аренда павильона</div>
-      <div class="payment-meta">Аренда · пр-т Независимости</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;1&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;1&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;1&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;1&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">850 р.</div>
-      <span class="badge overdue">Просрочен</span>
-    </div>
-  </div><div class="payment-card overdue">
-    <div class="day-circle overdue">15</div>
-    <div class="payment-info">
-      <div class="payment-name">Реклама Instagram</div>
-      <div class="payment-meta">Реклама · таргет</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 3 мес.</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;3&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;3&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;3&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;3&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">200 р.</div>
-      <span class="badge overdue">Просрочен</span>
-    </div>
-  </div><div class="payment-card soon">
-    <div class="day-circle soon">22</div>
-    <div class="payment-info">
-      <div class="payment-name">Налог УСН</div>
-      <div class="payment-meta">Налоги</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;2&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;2&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;2&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;2&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">120 р.</div>
-      <span class="badge soon">Скоро</span>
-    </div>
-  </div></div>
+      <div class="payment-list" id="all-list"></div>
     </div>
     <div id="tab-calendar" style="display:none">
       <div class="cal-nav">
         <button class="cal-nav-btn" onclick="calPrev()"><i class="ti ti-chevron-left"></i></button>
-        <span class="cal-month" id="cal-month-label">Июнь 2026</span>
+        <span class="cal-month" id="cal-month-label"></span>
         <button class="cal-nav-btn" onclick="calNext()"><i class="ti ti-chevron-right"></i></button>
       </div>
       <div class="cal-weekdays">
         <div class="cal-wd">Пн</div><div class="cal-wd">Вт</div><div class="cal-wd">Ср</div>
         <div class="cal-wd">Чт</div><div class="cal-wd">Пт</div><div class="cal-wd">Сб</div><div class="cal-wd">Вс</div>
       </div>
-      <div class="cal-grid" id="cal-grid"><div class="cal-cell" onclick="">1</div><div class="cal-cell" onclick="">2</div><div class="cal-cell" onclick="">3</div><div class="cal-cell" onclick="">4</div><div class="cal-cell has-pay" onclick="calDetail(5)">5<span class="cal-dot dot-overdue"></span></div><div class="cal-cell" onclick="">6</div><div class="cal-cell" onclick="">7</div><div class="cal-cell" onclick="">8</div><div class="cal-cell" onclick="">9</div><div class="cal-cell" onclick="">10</div><div class="cal-cell" onclick="">11</div><div class="cal-cell" onclick="">12</div><div class="cal-cell" onclick="">13</div><div class="cal-cell" onclick="">14</div><div class="cal-cell has-pay" onclick="calDetail(15)">15<span class="cal-dot dot-overdue"></span></div><div class="cal-cell" onclick="">16</div><div class="cal-cell" onclick="">17</div><div class="cal-cell today" onclick="">18</div><div class="cal-cell" onclick="">19</div><div class="cal-cell" onclick="">20</div><div class="cal-cell" onclick="">21</div><div class="cal-cell has-pay" onclick="calDetail(22)">22<span class="cal-dot dot-soon"></span></div><div class="cal-cell" onclick="">23</div><div class="cal-cell" onclick="">24</div><div class="cal-cell" onclick="">25</div><div class="cal-cell" onclick="">26</div><div class="cal-cell" onclick="">27</div><div class="cal-cell" onclick="">28</div><div class="cal-cell" onclick="">29</div><div class="cal-cell" onclick="">30</div></div>
+      <div class="cal-grid" id="cal-grid"></div>
       <div class="cal-detail" id="cal-detail"></div>
     </div>
   </div>
@@ -286,7 +192,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   <button class="nav-item" id="nav-calendar" onclick="switchTab(&#39;calendar&#39;)"><i class="ti ti-calendar"></i>Календарь</button>
 </div>
 
-<!-- Main sheet (add/edit) -->
 <div class="sheet-bg" id="sheet-bg" onclick="closeSheet(event)">
   <div class="sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
@@ -312,11 +217,10 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
         <option>Реклама</option><option>Поставщики</option><option>Коммуналка</option><option selected="">Прочее</option>
       </select>
     </div>
-    <!-- Months selector -->
     <div class="form-group">
       <label class="form-label">На сколько месяцев вперёд</label>
       <div class="months-grid" id="months-grid"></div>
-      <div class="months-info" id="months-info"></div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px" id="months-info"></div>
     </div>
     <div class="form-group">
       <label class="form-label">Примечание</label>
@@ -326,7 +230,6 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   </div>
 </div>
 
-<!-- Extend sheet -->
 <div class="sheet-bg" id="extend-bg" onclick="closeExtend(event)">
   <div class="extend-sheet" onclick="event.stopPropagation()">
     <div class="sheet-handle"></div>
@@ -340,58 +243,85 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     <div style="font-size:13px;color:var(--text2);margin-bottom:16px" id="extend-result"></div>
     <div class="sheet-btns">
       <button class="sheet-btn cancel" onclick="closeExtend()">Отмена</button>
-      <button class="sheet-btn save" onclick="confirmExtend()">Продлить</button>
+      <button class="sheet-btn save" id="extend-save-btn" onclick="confirmExtend()">Продлить</button>
     </div>
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-const tg = window.Telegram?.WebApp;
+const SUPABASE_URL='https://wbzkntpkzioypzijcgyp.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndiektudHBremlveXB6aWpjZ3lwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MjQ4MjMsImV4cCI6MjA5NzMwMDgyM30.E2NrasWDS5-cSCz5pzAwsGZRk_ghJ5E3KJShLp4iu2U';
+
+const tg=window.Telegram?.WebApp;
 if(tg){tg.expand();tg.ready();}
 
 const MONTHS_RU=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTHS_GEN=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 const NOW=new Date();
 const CY=NOW.getFullYear(),CM=NOW.getMonth(),CD=NOW.getDate();
-let payments=[],paid={},editId=null,calY=CY,calM=CM;
-let selectedMonths=3;
-let extendId=null,extendAdd=3;
+let payments=[],paidMarks=[],editId=null,calY=CY,calM=CM;
+let selectedMonths=3,extendId=null,extendAdd=3;
 
 const MONTH_OPTIONS=[
-  {v:1,label:'1 мес'},
-  {v:2,label:'2 мес'},
-  {v:3,label:'3 мес'},
-  {v:6,label:'6 мес'},
-  {v:12,label:'1 год'},
-  {v:24,label:'2 года'},
-  {v:0,label:'∞ всегда',special:true},
+  {v:1,label:'1 мес'},{v:2,label:'2 мес'},{v:3,label:'3 мес'},{v:6,label:'6 мес'},
+  {v:12,label:'1 год'},{v:24,label:'2 года'},{v:0,label:'∞ всегда',special:true},
 ];
 
-const LS={
-  get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}},
-  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
-};
-
-function load(){
-  payments=LS.get('mc_payments_v2')||[];
-  paid=LS.get('mc_paid_v2')||{};
-  if(!payments.length){
-    const st=`${CY}-${String(CM).padStart(2,'0')}`;
-    payments=[
-      {id:'1',name:'Аренда павильона',amount:850,day:5,category:'Аренда',note:'пр-т Независимости',startYM:st,months:0},
-      {id:'2',name:'Налог УСН',amount:120,day:22,category:'Налоги',note:'',startYM:st,months:12},
-      {id:'3',name:'Реклама Instagram',amount:200,day:15,category:'Реклама',note:'таргет',startYM:st,months:3},
-    ];
-    LS.set('mc_payments_v2',payments);
-  }
-  render();
+async function api(method,path,body){
+  const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{
+    method,
+    headers:{
+      'apikey':SUPABASE_KEY,
+      'Authorization':'Bearer '+SUPABASE_KEY,
+      'Content-Type':'application/json',
+      'Prefer': method==='POST'?'return=representation':'',
+    },
+    body:body?JSON.stringify(body):undefined
+  });
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+  if(method==='DELETE'||res.status===204)return null;
+  return res.json();
 }
-function save(){LS.set('mc_payments_v2',payments);LS.set('mc_paid_v2',paid);}
+
+function setSyncStatus(state,text){
+  const dot=document.getElementById('sync-dot');
+  const txt=document.getElementById('sync-text');
+  dot.className='sync-dot'+(state==='loading'?' loading':state==='error'?' error':'');
+  txt.textContent=text;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+async function loadData(){
+  try{
+    setSyncStatus('loading','Загрузка...');
+    const[p,pm]=await Promise.all([
+      api('GET','payments?order=day.asc'),
+      api('GET','paid_marks')
+    ]);
+    payments=p||[];
+    paidMarks=pm||[];
+    setSyncStatus('ok','Данные синхронизированы');
+    render();
+  }catch(e){
+    setSyncStatus('error','Ошибка подключения');
+    document.getElementById('home-list').innerHTML=`<div class="empty"><i class="ti ti-wifi-off"></i><div class="empty-title">Нет подключения</div><div class="empty-sub">Проверьте интернет и обновите</div></div>`;
+  }
+}
+
+function isPaid(paymentId,y,m){
+  return paidMarks.some(pm=>pm.payment_id===paymentId&&pm.year===y&&pm.month===m);
+}
 
 function isActiveInMonth(p,y,m){
   if(p.months===0)return true;
-  const[sy,sm]=p.startYM.split('-').map(Number);
-  const startIdx=sy*12+sm;
+  const startIdx=p.start_year*12+p.start_month;
   const endIdx=startIdx+p.months-1;
   const curIdx=y*12+m;
   return curIdx>=startIdx&&curIdx<=endIdx;
@@ -399,17 +329,15 @@ function isActiveInMonth(p,y,m){
 
 function remainingMonths(p){
   if(p.months===0)return Infinity;
-  const[sy,sm]=p.startYM.split('-').map(Number);
-  const startIdx=sy*12+sm;
+  const startIdx=p.start_year*12+p.start_month;
   const endIdx=startIdx+p.months-1;
   const curIdx=CY*12+CM;
   return endIdx-curIdx+1;
 }
 
-function pKey(id,y,m){return`${id}_${y}_${m}`}
 function status(p,y=CY,m=CM){
   if(!isActiveInMonth(p,y,m))return'inactive';
-  if(paid[pKey(p.id,y,m)])return'paid';
+  if(isPaid(p.id,y,m))return'paid';
   if(y!==CY||m!==CM)return'upcoming';
   if(p.day<CD)return'overdue';
   if(p.day-CD<=7)return'soon';
@@ -436,7 +364,7 @@ function cardHTML(p,y=CY,m=CM){
   const day=Math.min(p.day,dim);
   const checkLabel=s==='paid'?'<i class="ti ti-x" style="font-size:13px"></i> Снять':'<i class="ti ti-check" style="font-size:13px"></i> Оплачено';
   const checkClass=s==='paid'?'uncheck':'check';
-  return`<div class="payment-card ${s}">
+  return`<div class="payment-card ${s}" id="card-${p.id}">
     <div class="day-circle ${s}">${day}</div>
     <div class="payment-info">
       <div class="payment-name">${p.name}</div>
@@ -460,7 +388,7 @@ function render(){
   document.getElementById('header-month').textContent=MONTHS_RU[CM]+' '+CY;
   const active=payments.filter(p=>isActiveInMonth(p,CY,CM)).sort((a,b)=>a.day-b.day);
   const total=active.reduce((s,p)=>s+Number(p.amount),0);
-  const paidN=active.filter(p=>paid[pKey(p.id,CY,CM)]).length;
+  const paidN=active.filter(p=>isPaid(p.id,CY,CM)).length;
   const over=active.filter(p=>status(p)==='overdue').length;
   document.getElementById('stats').innerHTML=`
     <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">${total.toLocaleString('ru-RU')} р.</div></div>
@@ -517,7 +445,7 @@ function switchTab(t){
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['home','list','calendar'][i]===t));
 }
 
-function buildMonthsGrid(containerId, currentVal, onChange){
+function buildMonthsGrid(containerId,currentVal,onChange){
   const el=document.getElementById(containerId);
   el.innerHTML=MONTH_OPTIONS.map(o=>`
     <button class="month-chip${o.special?' special':''}${o.v===currentVal?' selected':''}"
@@ -525,18 +453,16 @@ function buildMonthsGrid(containerId, currentVal, onChange){
   `).join('');
 }
 
-function selectMonthChip(containerId, val, btn, onChange){
-  document.querySelectorAll(`#${containerId} .month-chip`).forEach(c=>c.classList.remove('selected'));
+function selectMonthChip(containerId,val,btn,onChange){
+  document.querySelectorAll('#'+containerId+' .month-chip').forEach(c=>c.classList.remove('selected'));
   btn.classList.add('selected');
   if(onChange==='main'){selectedMonths=val;updateMonthsInfo();}
   else if(onChange==='extend'){extendAdd=val;updateExtendResult();}
 }
 
 function updateMonthsInfo(){
-  const el=document.getElementById('months-info');
-  if(!el)return;
+  const el=document.getElementById('months-info');if(!el)return;
   if(selectedMonths===0){el.textContent='Платёж будет отображаться каждый месяц без ограничений';return;}
-  const now=new Date(CY,CM,1);
   const end=new Date(CY,CM+selectedMonths-1,1);
   el.textContent=`С ${MONTHS_GEN[CM]} по ${MONTHS_GEN[end.getMonth()]} ${end.getFullYear()}`;
 }
@@ -548,7 +474,7 @@ function openAdd(){
   document.getElementById('f-cat').value='Прочее';
   buildMonthsGrid('months-grid',3,'main');
   updateMonthsInfo();
-  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" onclick="saveP()">Сохранить</button>`;
+  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" id="save-btn" onclick="saveP()">Сохранить</button>`;
   document.getElementById('sheet-bg').classList.add('open');
 }
 
@@ -563,7 +489,7 @@ function openEdit(id){
   document.getElementById('f-note').value=p.note||'';
   buildMonthsGrid('months-grid',p.months,'main');
   updateMonthsInfo();
-  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn del" onclick="delP('${id}')">Удалить</button><button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" onclick="saveP()">Сохранить</button>`;
+  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn del" onclick="delP('${id}')">Удалить</button><button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" id="save-btn" onclick="saveP()">Сохранить</button>`;
   document.getElementById('sheet-bg').classList.add('open');
 }
 
@@ -572,41 +498,60 @@ function closeSheet(e){
   document.getElementById('sheet-bg').classList.remove('open');
 }
 
-function saveP(){
+async function saveP(){
   const name=document.getElementById('f-name').value.trim();
   const amount=parseFloat(document.getElementById('f-amount').value);
   const day=parseInt(document.getElementById('f-day').value);
   const cat=document.getElementById('f-cat').value;
   const note=document.getElementById('f-note').value.trim();
   if(!name||isNaN(amount)||isNaN(day)||day<1||day>31){alert('Заполните название, сумму и день');return;}
-  const startYM=`${CY}-${String(CM).padStart(2,'0')}`;
-  if(editId){
-    const i=payments.findIndex(p=>p.id===editId);
-    if(i>=0)payments[i]={...payments[i],name,amount,day,category:cat,note,months:selectedMonths};
-  } else {
-    payments.push({id:Date.now().toString(),name,amount,day,category:cat,note,startYM,months:selectedMonths});
+  const btn=document.getElementById('save-btn');
+  btn.disabled=true;btn.textContent='Сохраняем...';
+  try{
+    if(editId){
+      await api('PATCH','payments?id=eq.'+editId,{name,amount,day,category:cat,note,months:selectedMonths});
+      showToast('Платёж обновлён');
+    } else {
+      await api('POST','payments',[{name,amount,day,category:cat,note,start_year:CY,start_month:CM,months:selectedMonths}]);
+      showToast('Платёж добавлен');
+    }
+    closeSheet();
+    await loadData();
+  }catch(e){
+    alert('Ошибка сохранения. Проверьте интернет.');
+    btn.disabled=false;btn.textContent='Сохранить';
   }
-  save();closeSheet();render();
 }
 
-function delP(id){
+async function delP(id){
   if(!confirm('Удалить платёж?'))return;
-  payments=payments.filter(p=>p.id!==id);
-  save();closeSheet();render();
+  try{
+    await api('DELETE','payments?id=eq.'+id);
+    showToast('Платёж удалён');
+    closeSheet();
+    await loadData();
+  }catch(e){alert('Ошибка удаления');}
 }
 
-function togglePaid(id,y,m){
-  const k=pKey(id,y,m);
-  if(paid[k])delete paid[k];else paid[k]=true;
-  save();render();
+async function togglePaid(id,y,m){
+  const already=isPaid(id,y,m);
+  try{
+    if(already){
+      await api('DELETE',`paid_marks?payment_id=eq.${id}&year=eq.${y}&month=eq.${m}`);
+    } else {
+      await api('POST','paid_marks',[{payment_id:id,year:y,month:m}]);
+    }
+    await loadData();
+  }catch(e){alert('Ошибка. Проверьте интернет.');}
 }
 
-function duplicateP(id){
+async function duplicateP(id){
   const p=payments.find(x=>x.id===id);if(!p)return;
-  const startYM=`${CY}-${String(CM).padStart(2,'0')}`;
-  const copy={...p,id:Date.now().toString(),name:p.name+' (копия)',startYM,months:p.months};
-  payments.push(copy);
-  save();render();
+  try{
+    await api('POST','payments',[{name:p.name+' (копия)',amount:p.amount,day:p.day,category:p.category,note:p.note,start_year:CY,start_month:CM,months:p.months}]);
+    showToast('Платёж продублирован');
+    await loadData();
+  }catch(e){alert('Ошибка дублирования');}
 }
 
 function openExtend(id){
@@ -624,24 +569,30 @@ function updateExtendResult(){
   const p=payments.find(x=>x.id===extendId);if(!p)return;
   if(p.months===0||extendAdd===0){
     document.getElementById('extend-result').textContent='Платёж и так бессрочный';
-    document.getElementById('extend-progress').style.width='100%';
-    return;
+    document.getElementById('extend-progress').style.width='100%';return;
   }
   const newTotal=p.months+extendAdd;
-  const[sy,sm]=p.startYM.split('-').map(Number);
-  const endM=(sm+newTotal-1)%12;
-  const endY=sy+Math.floor((sm+newTotal-1)/12);
+  const endM=(p.start_month+newTotal-1)%12;
+  const endY=p.start_year+Math.floor((p.start_month+newTotal-1)/12);
   document.getElementById('extend-result').textContent=`Будет действовать до ${MONTHS_GEN[endM]} ${endY} (итого ${newTotal} мес.)`;
   const pct=Math.min(100,Math.round((p.months/newTotal)*100));
   document.getElementById('extend-progress').style.width=pct+'%';
 }
 
-function confirmExtend(){
+async function confirmExtend(){
   const p=payments.find(x=>x.id===extendId);if(!p)return;
-  if(p.months===0){closeExtend();return;}
-  if(extendAdd===0){p.months=0;}
-  else{p.months+=extendAdd;}
-  save();closeExtend();render();
+  const btn=document.getElementById('extend-save-btn');
+  btn.disabled=true;btn.textContent='Сохраняем...';
+  try{
+    const newMonths=p.months===0||extendAdd===0?0:p.months+extendAdd;
+    await api('PATCH','payments?id=eq.'+extendId,{months:newMonths});
+    showToast('Платёж продлён');
+    closeExtend();
+    await loadData();
+  }catch(e){
+    alert('Ошибка. Проверьте интернет.');
+    btn.disabled=false;btn.textContent='Продлить';
+  }
 }
 
 function closeExtend(e){
@@ -649,7 +600,7 @@ function closeExtend(e){
   document.getElementById('extend-bg').classList.remove('open');
 }
 
-load();
+loadData();
 </script>
 
 
