@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///C:/Users/100nout/Downloads/payment_app_v2.html -->
+<html lang="ru" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Meduza Crystal — Платежи</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="./Meduza Crystal — Платежи_files/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#ffffff;--bg2:#f7f7f8;--bg3:#ebebed;
+  --text:#1a1a1a;--text2:#6b6b7b;--text3:#9999aa;
+  --border:#e5e5ea;
+  --green:#1D9E75;--green-bg:#EAF3DE;--green-text:#3B6D11;
+  --amber:#EF9F27;--amber-bg:#FAEEDA;--amber-text:#854F0B;
+  --red:#E24B4A;--red-bg:#FCEBEB;--red-text:#A32D2D;
+  --blue:#378ADD;--blue-bg:#E6F1FB;--blue-text:#185FA5;
+  --purple:#7F77DD;--purple-bg:#EEEDFE;--purple-text:#3C3489;
+  --radius:12px;--radius-sm:8px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#1c1c1e;--bg2:#2c2c2e;--bg3:#3a3a3c;
+    --text:#f2f2f7;--text2:#8e8e93;--text3:#636366;
+    --border:#38383a;
+    --green-bg:#1a3a2a;--green-text:#5CC999;
+    --amber-bg:#3a2a0a;--amber-text:#F5C060;
+    --red-bg:#3a1a1a;--red-text:#FF6B6B;
+    --blue-bg:#1a2a3a;--blue-text:#64AAEE;
+    --purple-bg:#2a2050;--purple-text:#B0ABEE;
+  }
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;font-size:16px;overflow-x:hidden}
+.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto}
+.header{padding:16px 16px 0;flex-shrink:0}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.header-title{font-size:22px;font-weight:700;letter-spacing:-0.5px}
+.header-sub{font-size:13px;color:var(--text2);margin-bottom:12px}
+.tabs{display:flex;gap:6px;padding:0 16px 12px;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:14px;font-weight:500;border:none;cursor:pointer;background:var(--bg2);color:var(--text2);transition:all .15s}
+.tab.active{background:var(--text);color:var(--bg)}
+.content{flex:1;overflow-y:auto;padding:0 16px 100px;scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+.stat-card{background:var(--bg2);border-radius:var(--radius-sm);padding:10px 12px}
+.stat-label{font-size:11px;color:var(--text2);margin-bottom:3px}
+.stat-value{font-size:18px;font-weight:600}
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:4px}
+.section-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
+.add-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:var(--text);color:var(--bg)}
+.payment-list{display:flex;flex-direction:column;gap:8px}
+.payment-card{background:var(--bg2);border-radius:var(--radius);padding:14px;display:flex;align-items:flex-start;gap:12px;position:relative;overflow:hidden}
+.payment-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.payment-card.overdue::before{background:var(--red)}
+.payment-card.soon::before{background:var(--amber)}
+.payment-card.upcoming::before{background:var(--blue)}
+.payment-card.paid::before{background:var(--green)}
+.day-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;flex-shrink:0}
+.day-circle.overdue{background:var(--red-bg);color:var(--red-text)}
+.day-circle.soon{background:var(--amber-bg);color:var(--amber-text)}
+.day-circle.upcoming{background:var(--blue-bg);color:var(--blue-text)}
+.day-circle.paid{background:var(--green-bg);color:var(--green-text)}
+.payment-info{flex:1;min-width:0}
+.payment-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.payment-meta{font-size:12px;color:var(--text2);margin-top:2px}
+.repeat-tag{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:500;padding:2px 7px;border-radius:10px;background:var(--purple-bg);color:var(--purple-text);margin-top:4px}
+.payment-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.payment-amount{font-size:15px;font-weight:600}
+.badge{font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+.badge.overdue{background:var(--red-bg);color:var(--red-text)}
+.badge.soon{background:var(--amber-bg);color:var(--amber-text)}
+.badge.upcoming{background:var(--blue-bg);color:var(--blue-text)}
+.badge.paid{background:var(--green-bg);color:var(--green-text)}
+.action-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.action-btn{background:var(--bg3);border:none;border-radius:20px;padding:5px 10px;font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:3px;white-space:nowrap}
+.action-btn:active{opacity:.7}
+.action-btn.check{color:var(--green-text);background:var(--green-bg)}
+.action-btn.uncheck{color:var(--text2)}
+.empty{text-align:center;padding:48px 24px;color:var(--text2)}
+.empty i{font-size:40px;display:block;margin-bottom:12px;opacity:.4}
+.empty-title{font-size:16px;font-weight:500;margin-bottom:6px;color:var(--text)}
+.empty-sub{font-size:14px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-month{font-size:17px;font-weight:600}
+.cal-nav-btn{background:var(--bg2);border:none;width:34px;height:34px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
+.cal-wd{font-size:11px;color:var(--text2);padding:4px 0;font-weight:500}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;font-size:13px;position:relative;cursor:default}
+.cal-cell.today{background:var(--text);color:var(--bg);font-weight:600}
+.cal-cell.has-pay{cursor:pointer}
+.cal-dot{width:5px;height:5px;border-radius:50%;position:absolute;bottom:3px}
+.dot-overdue{background:var(--red)}
+.dot-soon{background:var(--amber)}
+.dot-upcoming{background:var(--blue)}
+.dot-paid{background:var(--green)}
+.cal-detail{margin-top:16px}
+.cal-detail-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg);border-top:0.5px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));display:flex;justify-content:space-around;z-index:50}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 16px;border:none;background:none;cursor:pointer;color:var(--text3);font-size:10px;font-weight:500}
+.nav-item.active{color:var(--text)}
+.nav-item i{font-size:22px}
+.sheet-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center}
+.sheet-bg.open{display:flex}
+.sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:16px 20px max(24px,env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
+.sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.sheet-title{font-size:18px;font-weight:600;margin-bottom:16px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:13px;color:var(--text2);margin-bottom:6px;display:block;font-weight:500}
+.form-input{width:100%;padding:13px 14px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);font-size:16px;color:var(--text);-webkit-appearance:none;appearance:none}
+.form-input:focus{outline:none;border-color:var(--text2)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.months-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.month-chip{padding:10px 4px;border-radius:var(--radius-sm);border:0.5px solid var(--border);background:var(--bg2);color:var(--text2);font-size:13px;font-weight:500;cursor:pointer;text-align:center;transition:all .15s}
+.month-chip.selected{background:var(--text);color:var(--bg);border-color:var(--text)}
+.month-chip.special{background:var(--purple-bg);color:var(--purple-text);border-color:var(--purple-bg)}
+.month-chip.special.selected{background:var(--purple);color:#fff;border-color:var(--purple)}
+.sheet-btns{display:flex;gap:10px;margin-top:6px}
+.sheet-btn{flex:1;padding:14px;border-radius:var(--radius-sm);border:none;font-size:16px;font-weight:600;cursor:pointer}
+.sheet-btn.cancel{background:var(--bg2);color:var(--text)}
+.sheet-btn.save{background:var(--text);color:var(--bg)}
+.sheet-btn.del{background:var(--red-bg);color:var(--red-text)}
+.sheet-btn:active{opacity:.75}
+.extend-sheet{background:var(--bg);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:16px 20px max(24px,env(safe-area-inset-bottom))}
+.progress-bar{height:4px;background:var(--bg3);border-radius:2px;margin:6px 0 12px;overflow:hidden}
+.progress-fill{height:100%;background:var(--purple);border-radius:2px;transition:width .3s}
+.months-info{font-size:13px;color:var(--text2);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div class="header-title">💳 Платежи</div>
+      <span id="header-month" style="font-size:13px;color:var(--text2)">Июнь 2026</span>
+    </div>
+    <div class="header-sub">Meduza Crystal</div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(&#39;home&#39;)">Главная</button>
+    <button class="tab" onclick="switchTab(&#39;list&#39;)">Все</button>
+    <button class="tab" onclick="switchTab(&#39;calendar&#39;)">Календарь</button>
+  </div>
+  <div class="content">
+    <div id="tab-home">
+      <div class="stats-row" id="stats">
+    <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">1&nbsp;170 р.</div></div>
+    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">0/3</div></div>
+    <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:var(--red)">2</div></div></div>
+      <div class="section-header">
+        <span class="section-title">Этот месяц</span>
+        <button class="add-btn" onclick="openAdd()"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
+      </div>
+      <div class="payment-list" id="home-list"><div class="payment-card overdue">
+    <div class="day-circle overdue">5</div>
+    <div class="payment-info">
+      <div class="payment-name">Аренда павильона</div>
+      <div class="payment-meta">Аренда · пр-т Независимости</div>
+      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>
+      <div class="action-row">
+        <button class="action-btn check" onclick="togglePaid(&#39;1&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
+        <button class="action-btn" onclick="openEdit(&#39;1&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;1&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;1&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">850 р.</div>
+      <span class="badge overdue">Просрочен</span>
+    </div>
+  </div><div class="payment-card overdue">
+    <div class="day-circle overdue">15</div>
+    <div class="payment-info">
+      <div class="payment-name">Реклама Instagram</div>
+      <div class="payment-meta">Реклама · таргет</div>
+      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 3 мес.</span>
+      <div class="action-row">
+        <button class="action-btn check" onclick="togglePaid(&#39;3&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
+        <button class="action-btn" onclick="openEdit(&#39;3&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;3&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;3&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">200 р.</div>
+      <span class="badge overdue">Просрочен</span>
+    </div>
+  </div><div class="payment-card soon">
+    <div class="day-circle soon">22</div>
+    <div class="payment-info">
+      <div class="payment-name">Налог УСН</div>
+      <div class="payment-meta">Налоги</div>
+      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span>
+      <div class="action-row">
+        <button class="action-btn check" onclick="togglePaid(&#39;2&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
+        <button class="action-btn" onclick="openEdit(&#39;2&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;2&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;2&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">120 р.</div>
+      <span class="badge soon">Скоро</span>
+    </div>
+  </div></div>
+    </div>
+    <div id="tab-list" style="display:none">
+      <div class="section-header">
+        <span class="section-title">Все платежи</span>
+        <button class="add-btn" onclick="openAdd()"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
+      </div>
+      <div class="payment-list" id="all-list"><div class="payment-card overdue">
+    <div class="day-circle overdue">5</div>
+    <div class="payment-info">
+      <div class="payment-name">Аренда павильона</div>
+      <div class="payment-meta">Аренда · пр-т Независимости</div>
+      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>
+      <div class="action-row">
+        <button class="action-btn check" onclick="togglePaid(&#39;1&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
+        <button class="action-btn" onclick="openEdit(&#39;1&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;1&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;1&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">850 р.</div>
+      <span class="badge overdue">Просрочен</span>
+    </div>
+  </div><div class="payment-card overdue">
+    <div class="day-circle overdue">15</div>
+    <div class="payment-info">
+      <div class="payment-name">Реклама Instagram</div>
+      <div class="payment-meta">Реклама · таргет</div>
+      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 3 мес.</span>
+      <div class="action-row">
+        <button class="action-btn check" onclick="togglePaid(&#39;3&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
+        <button class="action-btn" onclick="openEdit(&#39;3&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;3&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;3&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">200 р.</div>
+      <span class="badge overdue">Просрочен</span>
+    </div>
+  </div><div class="payment-card soon">
+    <div class="day-circle soon">22</div>
+    <div class="payment-info">
+      <div class="payment-name">Налог УСН</div>
+      <div class="payment-meta">Налоги</div>
+      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span>
+      <div class="action-row">
+        <button class="action-btn check" onclick="togglePaid(&#39;2&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
+        <button class="action-btn" onclick="openEdit(&#39;2&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;2&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;2&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">120 р.</div>
+      <span class="badge soon">Скоро</span>
+    </div>
+  </div></div>
+    </div>
+    <div id="tab-calendar" style="display:none">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calPrev()"><i class="ti ti-chevron-left"></i></button>
+        <span class="cal-month" id="cal-month-label">Июнь 2026</span>
+        <button class="cal-nav-btn" onclick="calNext()"><i class="ti ti-chevron-right"></i></button>
+      </div>
+      <div class="cal-weekdays">
+        <div class="cal-wd">Пн</div><div class="cal-wd">Вт</div><div class="cal-wd">Ср</div>
+        <div class="cal-wd">Чт</div><div class="cal-wd">Пт</div><div class="cal-wd">Сб</div><div class="cal-wd">Вс</div>
+      </div>
+      <div class="cal-grid" id="cal-grid"><div class="cal-cell" onclick="">1</div><div class="cal-cell" onclick="">2</div><div class="cal-cell" onclick="">3</div><div class="cal-cell" onclick="">4</div><div class="cal-cell has-pay" onclick="calDetail(5)">5<span class="cal-dot dot-overdue"></span></div><div class="cal-cell" onclick="">6</div><div class="cal-cell" onclick="">7</div><div class="cal-cell" onclick="">8</div><div class="cal-cell" onclick="">9</div><div class="cal-cell" onclick="">10</div><div class="cal-cell" onclick="">11</div><div class="cal-cell" onclick="">12</div><div class="cal-cell" onclick="">13</div><div class="cal-cell" onclick="">14</div><div class="cal-cell has-pay" onclick="calDetail(15)">15<span class="cal-dot dot-overdue"></span></div><div class="cal-cell" onclick="">16</div><div class="cal-cell" onclick="">17</div><div class="cal-cell today" onclick="">18</div><div class="cal-cell" onclick="">19</div><div class="cal-cell" onclick="">20</div><div class="cal-cell" onclick="">21</div><div class="cal-cell has-pay" onclick="calDetail(22)">22<span class="cal-dot dot-soon"></span></div><div class="cal-cell" onclick="">23</div><div class="cal-cell" onclick="">24</div><div class="cal-cell" onclick="">25</div><div class="cal-cell" onclick="">26</div><div class="cal-cell" onclick="">27</div><div class="cal-cell" onclick="">28</div><div class="cal-cell" onclick="">29</div><div class="cal-cell" onclick="">30</div></div>
+      <div class="cal-detail" id="cal-detail"></div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-item active" id="nav-home" onclick="switchTab(&#39;home&#39;)"><i class="ti ti-home"></i>Главная</button>
+  <button class="nav-item" id="nav-list" onclick="switchTab(&#39;list&#39;)"><i class="ti ti-list"></i>Все</button>
+  <button class="nav-item" id="nav-calendar" onclick="switchTab(&#39;calendar&#39;)"><i class="ti ti-calendar"></i>Календарь</button>
+</div>
+
+<!-- Main sheet (add/edit) -->
+<div class="sheet-bg" id="sheet-bg" onclick="closeSheet(event)">
+  <div class="sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="sheet-title">Новый платёж</div>
+    <div class="form-group">
+      <label class="form-label">Название платежа</label>
+      <input class="form-input" id="f-name" type="text" placeholder="Например: Аренда помещения">
+    </div>
+    <div class="form-row-2">
+      <div class="form-group">
+        <label class="form-label">Сумма (руб.)</label>
+        <input class="form-input" id="f-amount" type="number" placeholder="0" inputmode="decimal">
+      </div>
+      <div class="form-group">
+        <label class="form-label">День месяца</label>
+        <input class="form-input" id="f-day" type="number" placeholder="1" min="1" max="31" inputmode="numeric">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Категория</label>
+      <select class="form-input" id="f-cat">
+        <option>Аренда</option><option>Налоги</option><option>Зарплата</option>
+        <option>Реклама</option><option>Поставщики</option><option>Коммуналка</option><option selected="">Прочее</option>
+      </select>
+    </div>
+    <!-- Months selector -->
+    <div class="form-group">
+      <label class="form-label">На сколько месяцев вперёд</label>
+      <div class="months-grid" id="months-grid"></div>
+      <div class="months-info" id="months-info"></div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Примечание</label>
+      <input class="form-input" id="f-note" type="text" placeholder="Необязательно">
+    </div>
+    <div class="sheet-btns" id="sheet-btns"></div>
+  </div>
+</div>
+
+<!-- Extend sheet -->
+<div class="sheet-bg" id="extend-bg" onclick="closeExtend(event)">
+  <div class="extend-sheet" onclick="event.stopPropagation()">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" id="extend-title">Продлить платёж</div>
+    <div style="font-size:14px;color:var(--text2);margin-bottom:16px" id="extend-sub"></div>
+    <div class="form-group">
+      <label class="form-label">Добавить месяцев</label>
+      <div class="months-grid" id="extend-months-grid"></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="extend-progress"></div></div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:16px" id="extend-result"></div>
+    <div class="sheet-btns">
+      <button class="sheet-btn cancel" onclick="closeExtend()">Отмена</button>
+      <button class="sheet-btn save" onclick="confirmExtend()">Продлить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+if(tg){tg.expand();tg.ready();}
+
+const MONTHS_RU=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MONTHS_GEN=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const NOW=new Date();
+const CY=NOW.getFullYear(),CM=NOW.getMonth(),CD=NOW.getDate();
+let payments=[],paid={},editId=null,calY=CY,calM=CM;
+let selectedMonths=3;
+let extendId=null,extendAdd=3;
+
+const MONTH_OPTIONS=[
+  {v:1,label:'1 мес'},
+  {v:2,label:'2 мес'},
+  {v:3,label:'3 мес'},
+  {v:6,label:'6 мес'},
+  {v:12,label:'1 год'},
+  {v:24,label:'2 года'},
+  {v:0,label:'∞ всегда',special:true},
+];
+
+const LS={
+  get(k){try{const v=localStorage.getItem(k);return v?JSON.parse(v):null}catch{return null}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+};
+
+function load(){
+  payments=LS.get('mc_payments_v2')||[];
+  paid=LS.get('mc_paid_v2')||{};
+  if(!payments.length){
+    const st=`${CY}-${String(CM).padStart(2,'0')}`;
+    payments=[
+      {id:'1',name:'Аренда павильона',amount:850,day:5,category:'Аренда',note:'пр-т Независимости',startYM:st,months:0},
+      {id:'2',name:'Налог УСН',amount:120,day:22,category:'Налоги',note:'',startYM:st,months:12},
+      {id:'3',name:'Реклама Instagram',amount:200,day:15,category:'Реклама',note:'таргет',startYM:st,months:3},
+    ];
+    LS.set('mc_payments_v2',payments);
+  }
+  render();
+}
+function save(){LS.set('mc_payments_v2',payments);LS.set('mc_paid_v2',paid);}
+
+function isActiveInMonth(p,y,m){
+  if(p.months===0)return true;
+  const[sy,sm]=p.startYM.split('-').map(Number);
+  const startIdx=sy*12+sm;
+  const endIdx=startIdx+p.months-1;
+  const curIdx=y*12+m;
+  return curIdx>=startIdx&&curIdx<=endIdx;
+}
+
+function remainingMonths(p){
+  if(p.months===0)return Infinity;
+  const[sy,sm]=p.startYM.split('-').map(Number);
+  const startIdx=sy*12+sm;
+  const endIdx=startIdx+p.months-1;
+  const curIdx=CY*12+CM;
+  return endIdx-curIdx+1;
+}
+
+function pKey(id,y,m){return`${id}_${y}_${m}`}
+function status(p,y=CY,m=CM){
+  if(!isActiveInMonth(p,y,m))return'inactive';
+  if(paid[pKey(p.id,y,m)])return'paid';
+  if(y!==CY||m!==CM)return'upcoming';
+  if(p.day<CD)return'overdue';
+  if(p.day-CD<=7)return'soon';
+  return'upcoming';
+}
+
+function repeatLabel(p){
+  if(p.months===0)return'<span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>';
+  const rem=remainingMonths(p);
+  if(rem<=0)return'<span class="repeat-tag" style="background:var(--red-bg);color:var(--red-text)"><i class="ti ti-calendar-off" style="font-size:11px"></i> Истёк</span>';
+  return`<span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё ${rem} мес.</span>`;
+}
+
+function statusLabel(s){
+  const map={overdue:'Просрочен',soon:'Скоро',upcoming:'Предстоит',paid:'Оплачено'};
+  if(!map[s])return'';
+  return`<span class="badge ${s}">${map[s]}</span>`;
+}
+
+function cardHTML(p,y=CY,m=CM){
+  const s=status(p,y,m);
+  if(s==='inactive')return'';
+  const dim=new Date(y,m+1,0).getDate();
+  const day=Math.min(p.day,dim);
+  const checkLabel=s==='paid'?'<i class="ti ti-x" style="font-size:13px"></i> Снять':'<i class="ti ti-check" style="font-size:13px"></i> Оплачено';
+  const checkClass=s==='paid'?'uncheck':'check';
+  return`<div class="payment-card ${s}">
+    <div class="day-circle ${s}">${day}</div>
+    <div class="payment-info">
+      <div class="payment-name">${p.name}</div>
+      <div class="payment-meta">${p.category}${p.note?' · '+p.note:''}</div>
+      ${repeatLabel(p)}
+      <div class="action-row">
+        <button class="action-btn ${checkClass}" onclick="togglePaid('${p.id}',${y},${m})">${checkLabel}</button>
+        <button class="action-btn" onclick="openEdit('${p.id}')"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend('${p.id}')"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP('${p.id}')"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">${Number(p.amount).toLocaleString('ru-RU')} р.</div>
+      ${statusLabel(s)}
+    </div>
+  </div>`;
+}
+
+function render(){
+  document.getElementById('header-month').textContent=MONTHS_RU[CM]+' '+CY;
+  const active=payments.filter(p=>isActiveInMonth(p,CY,CM)).sort((a,b)=>a.day-b.day);
+  const total=active.reduce((s,p)=>s+Number(p.amount),0);
+  const paidN=active.filter(p=>paid[pKey(p.id,CY,CM)]).length;
+  const over=active.filter(p=>status(p)==='overdue').length;
+  document.getElementById('stats').innerHTML=`
+    <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">${total.toLocaleString('ru-RU')} р.</div></div>
+    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">${paidN}/${active.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:${over?'var(--red)':'inherit'}">${over}</div></div>`;
+  const listHTML=active.length?active.map(p=>cardHTML(p)).join(''):`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div><div class="empty-sub">Нажмите «Добавить»</div></div>`;
+  document.getElementById('home-list').innerHTML=listHTML;
+  const allSorted=[...payments].sort((a,b)=>a.day-b.day);
+  document.getElementById('all-list').innerHTML=allSorted.map(p=>cardHTML(p)).join('')||`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div></div>`;
+  renderCal();
+}
+
+function renderCal(){
+  document.getElementById('cal-month-label').textContent=MONTHS_RU[calM]+' '+calY;
+  const first=new Date(calY,calM,1).getDay();
+  const shift=first===0?6:first-1;
+  const dim=new Date(calY,calM+1,0).getDate();
+  const byDay={};
+  payments.filter(p=>isActiveInMonth(p,calY,calM)).forEach(p=>{
+    const d=Math.min(p.day,dim);(byDay[d]=byDay[d]||[]).push(p);
+  });
+  let html='';
+  for(let i=0;i<shift;i++)html+=`<div class="cal-cell"></div>`;
+  for(let d=1;d<=dim;d++){
+    const isToday=calY===CY&&calM===CM&&d===CD;
+    const ps=byDay[d]||[];
+    let dot='';
+    if(ps.length){
+      const ss=ps.map(p=>status(p,calY,calM));
+      const pr=ss.includes('overdue')?'overdue':ss.includes('soon')?'soon':ss.includes('upcoming')?'upcoming':'paid';
+      dot=`<span class="cal-dot dot-${pr}"></span>`;
+    }
+    html+=`<div class="cal-cell${isToday?' today':''}${ps.length?' has-pay':''}" onclick="${ps.length?`calDetail(${d})`:''}">${d}${dot}</div>`;
+  }
+  document.getElementById('cal-grid').innerHTML=html;
+}
+
+function calDetail(day){
+  const dim=new Date(calY,calM+1,0).getDate();
+  const d=Math.min(day,dim);
+  const ps=payments.filter(p=>isActiveInMonth(p,calY,calM)&&Math.min(p.day,dim)===d);
+  if(!ps.length){document.getElementById('cal-detail').innerHTML='';return;}
+  document.getElementById('cal-detail').innerHTML=`<div class="cal-detail-title">${day} числа</div><div class="payment-list">${ps.map(p=>cardHTML(p,calY,calM)).join('')}</div>`;
+}
+
+function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderCal();document.getElementById('cal-detail').innerHTML='';}
+function calNext(){calM++;if(calM>11){calM=0;calY++;}renderCal();document.getElementById('cal-detail').innerHTML='';}
+
+function switchTab(t){
+  ['home','list','calendar'].forEach(x=>{
+    document.getElementById('tab-'+x).style.display=x===t?'':'none';
+    document.getElementById('nav-'+x).classList.toggle('active',x===t);
+  });
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['home','list','calendar'][i]===t));
+}
+
+function buildMonthsGrid(containerId, currentVal, onChange){
+  const el=document.getElementById(containerId);
+  el.innerHTML=MONTH_OPTIONS.map(o=>`
+    <button class="month-chip${o.special?' special':''}${o.v===currentVal?' selected':''}"
+      onclick="selectMonthChip('${containerId}',${o.v},this,'${onChange}')">${o.label}</button>
+  `).join('');
+}
+
+function selectMonthChip(containerId, val, btn, onChange){
+  document.querySelectorAll(`#${containerId} .month-chip`).forEach(c=>c.classList.remove('selected'));
+  btn.classList.add('selected');
+  if(onChange==='main'){selectedMonths=val;updateMonthsInfo();}
+  else if(onChange==='extend'){extendAdd=val;updateExtendResult();}
+}
+
+function updateMonthsInfo(){
+  const el=document.getElementById('months-info');
+  if(!el)return;
+  if(selectedMonths===0){el.textContent='Платёж будет отображаться каждый месяц без ограничений';return;}
+  const now=new Date(CY,CM,1);
+  const end=new Date(CY,CM+selectedMonths-1,1);
+  el.textContent=`С ${MONTHS_GEN[CM]} по ${MONTHS_GEN[end.getMonth()]} ${end.getFullYear()}`;
+}
+
+function openAdd(){
+  editId=null;selectedMonths=3;
+  document.getElementById('sheet-title').textContent='Новый платёж';
+  ['f-name','f-amount','f-day','f-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-cat').value='Прочее';
+  buildMonthsGrid('months-grid',3,'main');
+  updateMonthsInfo();
+  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" onclick="saveP()">Сохранить</button>`;
+  document.getElementById('sheet-bg').classList.add('open');
+}
+
+function openEdit(id){
+  const p=payments.find(x=>x.id===id);if(!p)return;
+  editId=id;selectedMonths=p.months;
+  document.getElementById('sheet-title').textContent='Редактировать';
+  document.getElementById('f-name').value=p.name;
+  document.getElementById('f-amount').value=p.amount;
+  document.getElementById('f-day').value=p.day;
+  document.getElementById('f-cat').value=p.category;
+  document.getElementById('f-note').value=p.note||'';
+  buildMonthsGrid('months-grid',p.months,'main');
+  updateMonthsInfo();
+  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn del" onclick="delP('${id}')">Удалить</button><button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" onclick="saveP()">Сохранить</button>`;
+  document.getElementById('sheet-bg').classList.add('open');
+}
+
+function closeSheet(e){
+  if(e&&e.target!==document.getElementById('sheet-bg'))return;
+  document.getElementById('sheet-bg').classList.remove('open');
+}
+
+function saveP(){
+  const name=document.getElementById('f-name').value.trim();
+  const amount=parseFloat(document.getElementById('f-amount').value);
+  const day=parseInt(document.getElementById('f-day').value);
+  const cat=document.getElementById('f-cat').value;
+  const note=document.getElementById('f-note').value.trim();
+  if(!name||isNaN(amount)||isNaN(day)||day<1||day>31){alert('Заполните название, сумму и день');return;}
+  const startYM=`${CY}-${String(CM).padStart(2,'0')}`;
+  if(editId){
+    const i=payments.findIndex(p=>p.id===editId);
+    if(i>=0)payments[i]={...payments[i],name,amount,day,category:cat,note,months:selectedMonths};
+  } else {
+    payments.push({id:Date.now().toString(),name,amount,day,category:cat,note,startYM,months:selectedMonths});
+  }
+  save();closeSheet();render();
+}
+
+function delP(id){
+  if(!confirm('Удалить платёж?'))return;
+  payments=payments.filter(p=>p.id!==id);
+  save();closeSheet();render();
+}
+
+function togglePaid(id,y,m){
+  const k=pKey(id,y,m);
+  if(paid[k])delete paid[k];else paid[k]=true;
+  save();render();
+}
+
+function duplicateP(id){
+  const p=payments.find(x=>x.id===id);if(!p)return;
+  const startYM=`${CY}-${String(CM).padStart(2,'0')}`;
+  const copy={...p,id:Date.now().toString(),name:p.name+' (копия)',startYM,months:p.months};
+  payments.push(copy);
+  save();render();
+}
+
+function openExtend(id){
+  const p=payments.find(x=>x.id===id);if(!p)return;
+  extendId=id;extendAdd=3;
+  document.getElementById('extend-title').textContent='Продлить «'+p.name+'»';
+  const rem=p.months===0?'бессрочно':`ещё ${remainingMonths(p)} мес.`;
+  document.getElementById('extend-sub').textContent='Сейчас: '+rem;
+  buildMonthsGrid('extend-months-grid',3,'extend');
+  updateExtendResult();
+  document.getElementById('extend-bg').classList.add('open');
+}
+
+function updateExtendResult(){
+  const p=payments.find(x=>x.id===extendId);if(!p)return;
+  if(p.months===0||extendAdd===0){
+    document.getElementById('extend-result').textContent='Платёж и так бессрочный';
+    document.getElementById('extend-progress').style.width='100%';
+    return;
+  }
+  const newTotal=p.months+extendAdd;
+  const[sy,sm]=p.startYM.split('-').map(Number);
+  const endM=(sm+newTotal-1)%12;
+  const endY=sy+Math.floor((sm+newTotal-1)/12);
+  document.getElementById('extend-result').textContent=`Будет действовать до ${MONTHS_GEN[endM]} ${endY} (итого ${newTotal} мес.)`;
+  const pct=Math.min(100,Math.round((p.months/newTotal)*100));
+  document.getElementById('extend-progress').style.width=pct+'%';
+}
+
+function confirmExtend(){
+  const p=payments.find(x=>x.id===extendId);if(!p)return;
+  if(p.months===0){closeExtend();return;}
+  if(extendAdd===0){p.months=0;}
+  else{p.months+=extendAdd;}
+  save();closeExtend();render();
+}
+
+function closeExtend(e){
+  if(e&&e.target!==document.getElementById('extend-bg'))return;
+  document.getElementById('extend-bg').classList.remove('open');
+}
+
+load();
+</script>
+
+
+</body></html>
