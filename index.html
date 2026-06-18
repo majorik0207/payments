@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0056)file:///C:/Users/100nout/Downloads/payment_app_v3_3.html -->
+<!-- saved from url=(0056)file:///C:/Users/100nout/Downloads/payment_app_v3_4.html -->
 <html lang="ru" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -93,9 +93,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
 .cal-wd{font-size:11px;color:var(--text2);padding:4px 0;font-weight:500}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
-.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;font-size:13px;position:relative;cursor:default}
+.cal-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:50%;font-size:13px;position:relative;cursor:pointer}
 .cal-cell.today{background:var(--text);color:var(--bg);font-weight:600}
-.cal-cell.has-pay{cursor:pointer}
+.cal-cell{cursor:pointer}
 .cal-dot{width:5px;height:5px;border-radius:50%;position:absolute;bottom:3px}
 .dot-overdue{background:var(--red)}
 .dot-soon{background:var(--amber)}
@@ -174,9 +174,9 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
     </div>
     <div id="tab-calendar" style="display:none">
       <div class="cal-nav">
-        <button class="cal-nav-btn" onclick="calPrev()"><i class="ti ti-chevron-left"></i></button>
+        <button class="cal-nav-btn" onclick="calPrev()"></button><button class="cal-nav-btn" onclick="calPrev()"><i class="ti ti-chevron-left"></i></button>#8592;
         <span class="cal-month" id="cal-month-label"></span>
-        <button class="cal-nav-btn" onclick="calNext()"><i class="ti ti-chevron-right"></i></button>
+        <button class="cal-nav-btn" onclick="calNext()"></button><button class="cal-nav-btn" onclick="calNext()"><i class="ti ti-chevron-right"></i></button>#8594;
       </div>
       <div class="cal-weekdays">
         <div class="cal-wd">Пн</div><div class="cal-wd">Вт</div><div class="cal-wd">Ср</div>
@@ -423,17 +423,45 @@ function renderCal(){
       const pr=ss.includes('overdue')?'overdue':ss.includes('soon')?'soon':ss.includes('upcoming')?'upcoming':'paid';
       dot=`<span class="cal-dot dot-${pr}"></span>`;
     }
-    html+=`<div class="cal-cell${isToday?' today':''}${ps.length?' has-pay':''}" onclick="${ps.length?`calDetail(${d})`:''}">${d}${dot}</div>`;
+    html+=`<div class="cal-cell${isToday?' today':''}${ps.length?' has-pay':''}" onclick="calDetail(${d})">${d}${dot}</div>`;
   }
   document.getElementById('cal-grid').innerHTML=html;
+}
+
+function openAddFromCal(day){
+  editId=null;selectedMonths=3;
+  document.getElementById('sheet-title').textContent='Новый платёж';
+  ['f-name','f-amount','f-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-day').value=day;
+  document.getElementById('f-cat').value='Прочее';
+  buildMonthsGrid('months-grid',3,'main');
+  updateMonthsInfo();
+  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" id="save-btn" onclick="saveP()">Сохранить</button>`;
+  document.getElementById('sheet-bg').classList.add('open');
 }
 
 function calDetail(day){
   const dim=new Date(calY,calM+1,0).getDate();
   const d=Math.min(day,dim);
   const ps=payments.filter(p=>isActiveInMonth(p,calY,calM)&&Math.min(p.day,dim)===d);
-  if(!ps.length){document.getElementById('cal-detail').innerHTML='';return;}
-  document.getElementById('cal-detail').innerHTML=`<div class="cal-detail-title">${day} числа</div><div class="payment-list">${ps.map(p=>cardHTML(p,calY,calM)).join('')}</div>`;
+  const monthName = MONTHS_GEN[calM];
+  if(!ps.length){
+    document.getElementById('cal-detail').innerHTML=`<div class="cal-detail" style="background:var(--bg2);border-radius:var(--radius);padding:14px;display:flex;align-items:center;justify-content:space-between;margin-top:12px"><div style="font-size:14px;color:var(--text2)"><i class="ti ti-calendar-off" style="font-size:16px;margin-right:6px"></i>Нет платежей ${day} ${monthName}</div><button class="add-btn" onclick="openAddOnDay(${day})"><i class="ti ti-plus" style="font-size:13px"></i> Добавить</button></div>`;
+    return;
+  }
+  document.getElementById('cal-detail').innerHTML=`<div class="cal-detail-title">${day} числа</div><div style="margin-bottom:10px;text-align:right"><button class="add-btn" onclick="openAddOnDay(${day})"><i class="ti ti-plus" style="font-size:13px"></i> Добавить</button></div><div class="payment-list">${ps.map(p=>cardHTML(p,calY,calM)).join('')}</div>`;
+}
+
+function openAddOnDay(day){
+  editId=null;selectedMonths=3;
+  document.getElementById('sheet-title').textContent='Новый платёж';
+  ['f-name','f-amount','f-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-day').value=day;
+  document.getElementById('f-cat').value='Прочее';
+  buildMonthsGrid('months-grid',3,'main');
+  updateMonthsInfo();
+  document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" id="save-btn" onclick="saveP()">Сохранить</button>`;
+  document.getElementById('sheet-bg').classList.add('open');
 }
 
 function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderCal();document.getElementById('cal-detail').innerHTML='';}
