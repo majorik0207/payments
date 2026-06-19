@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<!-- saved from url=(0056)file:///C:/Users/100nout/Downloads/payment_app_v3_7.html -->
+<!-- saved from url=(0054)file:///C:/Users/100nout/Downloads/payment_app_v4.html -->
 <html lang="ru" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Meduza Crystal — Платежи</title>
 <script>window.Telegram={WebApp:{expand:()=>{},ready:()=>{}}}</script>
-<script src="./Meduza Crystal — Платежи_files/telegram-web-app.js.Без названия" onerror="console.log(&#39;TG SDK not available&#39;)"></script>
-<link rel="stylesheet" href="./Meduza Crystal — Платежи_files/tabler-icons.min.css">
+<script src="./index_files/telegram-web-app.js.Без названия" onerror="console.log(&#39;TG SDK not available&#39;)"></script>
+<link rel="stylesheet" href="./index_files/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -152,7 +152,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   <div class="header">
     <div class="header-top">
       <div class="header-title">💳 Платежи</div>
-      <span id="header-month" style="font-size:13px;color:var(--text2)">Июнь 2026</span>
+      <span id="header-month" style="font-size:13px;color:var(--text2)"></span>
     </div>
     <div class="header-sub">Meduza Crystal</div>
   </div>
@@ -163,69 +163,32 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   </div>
   <div class="content">
     <div id="tab-home">
-      <div class="sync-indicator"><div class="sync-dot" id="sync-dot"></div><span id="sync-text">Данные синхронизированы</span></div>
-      <div class="stats-row" id="stats">
-    <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">220 р.</div></div>
-    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">0/1</div></div>
-    <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:inherit">0</div></div></div>
+      <div class="sync-indicator"><div class="sync-dot error" id="sync-dot"></div><span id="sync-text">Ошибка подключения</span></div>
+      <div class="stats-row" id="stats"></div>
       <div class="section-header">
         <span class="section-title">Этот месяц</span>
         <button class="add-btn" onclick="openAdd(null,null,null)"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
       </div>
-      <div class="payment-list" id="home-list"><div class="payment-card soon">
-    <div class="day-circle soon">22</div>
-    <div class="payment-info">
-      <div class="payment-name">Коммуналка 224</div>
-      <div class="payment-meta">Коммуналка · Оплата до 25-го</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">220 р.</div>
-      <span class="badge soon">Скоро</span>
-    </div>
-  </div></div>
+      <div class="payment-list" id="home-list"><div class="empty"><i class="ti ti-wifi-off"></i><div class="empty-title">Нет подключения</div><div class="empty-sub">Проверьте интернет и обновите</div></div></div>
     </div>
     <div id="tab-list" style="display:none">
       <div class="section-header">
         <span class="section-title">Все платежи</span>
         <button class="add-btn" onclick="openAdd(null,null,null)"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
       </div>
-      <div class="payment-list" id="all-list"><div class="payment-card soon">
-    <div class="day-circle soon">22</div>
-    <div class="payment-info">
-      <div class="payment-name">Коммуналка 224</div>
-      <div class="payment-meta">Коммуналка · Оплата до 25-го</div>
-      <span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span>
-      <div class="action-row">
-        <button class="action-btn check" onclick="togglePaid(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;,2026,5)"><i class="ti ti-check" style="font-size:13px"></i> Оплачено</button>
-        <button class="action-btn" onclick="openEdit(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
-        <button class="action-btn" onclick="duplicateP(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
-      </div>
-    </div>
-    <div class="payment-right">
-      <div class="payment-amount">220 р.</div>
-      <span class="badge soon">Скоро</span>
-    </div>
-  </div></div>
+      <div class="payment-list" id="all-list"></div>
     </div>
     <div id="tab-calendar" style="display:none">
       <div class="cal-nav">
         <button class="cal-nav-btn" onclick="calPrev()">←</button>
-        <span class="cal-month" id="cal-month-label">Июнь 2026</span>
+        <span class="cal-month" id="cal-month-label"></span>
         <button class="cal-nav-btn" onclick="calNext()">→</button>
       </div>
       <div class="cal-weekdays">
         <div class="cal-wd">Пн</div><div class="cal-wd">Вт</div><div class="cal-wd">Ср</div>
         <div class="cal-wd">Чт</div><div class="cal-wd">Пт</div><div class="cal-wd">Сб</div><div class="cal-wd">Вс</div>
       </div>
-      <div class="cal-grid" id="cal-grid"><div class="cal-cell" onclick="calDetail(1)">1</div><div class="cal-cell" onclick="calDetail(2)">2</div><div class="cal-cell" onclick="calDetail(3)">3</div><div class="cal-cell" onclick="calDetail(4)">4</div><div class="cal-cell" onclick="calDetail(5)">5</div><div class="cal-cell" onclick="calDetail(6)">6</div><div class="cal-cell" onclick="calDetail(7)">7</div><div class="cal-cell" onclick="calDetail(8)">8</div><div class="cal-cell" onclick="calDetail(9)">9</div><div class="cal-cell" onclick="calDetail(10)">10</div><div class="cal-cell" onclick="calDetail(11)">11</div><div class="cal-cell" onclick="calDetail(12)">12</div><div class="cal-cell" onclick="calDetail(13)">13</div><div class="cal-cell" onclick="calDetail(14)">14</div><div class="cal-cell" onclick="calDetail(15)">15</div><div class="cal-cell" onclick="calDetail(16)">16</div><div class="cal-cell" onclick="calDetail(17)">17</div><div class="cal-cell today" onclick="calDetail(18)">18</div><div class="cal-cell" onclick="calDetail(19)">19</div><div class="cal-cell" onclick="calDetail(20)">20</div><div class="cal-cell" onclick="calDetail(21)">21</div><div class="cal-cell" onclick="calDetail(22)">22<span class="cal-dot dot-soon"></span></div><div class="cal-cell" onclick="calDetail(23)">23</div><div class="cal-cell" onclick="calDetail(24)">24</div><div class="cal-cell" onclick="calDetail(25)">25</div><div class="cal-cell" onclick="calDetail(26)">26</div><div class="cal-cell" onclick="calDetail(27)">27</div><div class="cal-cell" onclick="calDetail(28)">28</div><div class="cal-cell" onclick="calDetail(29)">29</div><div class="cal-cell" onclick="calDetail(30)">30</div></div>
+      <div class="cal-grid" id="cal-grid"></div>
       <div class="cal-detail" id="cal-detail"></div>
     </div>
   </div>
@@ -257,8 +220,22 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
         <option>Реклама</option><option>Поставщики</option><option>Коммуналка</option><option selected="">Прочее</option>
       </select>
     </div>
-    <!-- Date picker -->
+    <!-- Repeat type toggle -->
     <div class="form-group">
+      <label class="form-label">Тип повторения</label>
+      <div style="display:flex;gap:8px">
+        <button type="button" class="month-chip" id="rtype-monthly" style="flex:1" onclick="setRepeatType(&#39;monthly&#39;)">📅 По числу месяца</button>
+        <button type="button" class="month-chip" id="rtype-weekly" style="flex:1" onclick="setRepeatType(&#39;weekly&#39;)">🔁 По дню недели</button>
+      </div>
+    </div>
+    <!-- Weekday picker (shown when weekly) -->
+    <div class="form-group" id="weekday-group" style="display:none">
+      <label class="form-label">Какой день недели</label>
+      <div class="months-grid" id="weekday-grid" style="grid-template-columns:repeat(7,1fr)"></div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px" id="weekday-info"></div>
+    </div>
+    <!-- Date picker (shown when monthly) -->
+    <div class="form-group" id="datepicker-group">
       <label class="form-label">Дата первого платежа</label>
       <div class="picker-wrap">
         <div class="picker-nav">
@@ -326,6 +303,9 @@ const CY=NOW.getFullYear(),CM=NOW.getMonth(),CD=NOW.getDate();
 let payments=[],paidMarks=[],editId=null,calY=CY,calM=CM;
 let selectedMonths=3,extendId=null,extendAdd=3;
 let pickerY=CY,pickerM=CM,pickerDay=null,pickerStartY=CY,pickerStartM=CM;
+let repeatType='monthly',selectedWeekday=null;
+const WEEKDAY_NAMES=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const WEEKDAY_FULL=['понедельникам','вторникам','средам','четвергам','пятницам','субботам','воскресеньям'];
 
 const MONTH_OPTIONS=[
   {v:1,label:'1 мес'},{v:2,label:'2 мес'},{v:3,label:'3 мес'},{v:6,label:'6 мес'},
@@ -372,9 +352,22 @@ async function loadData(){
 function isPaid(id,y,m){return paidMarks.some(pm=>pm.payment_id===id&&pm.year===y&&pm.month===m);}
 
 function isActiveInMonth(p,y,m){
+  if(p.repeat_type==='weekly')return true; // weekly payments always active (shown per-occurrence)
   if(p.months===0)return true;
   const si=p.start_year*12+p.start_month,ei=si+p.months-1,ci=y*12+m;
   return ci>=si&&ci<=ei;
+}
+
+function getWeeklyDatesInMonth(p,y,m){
+  // Returns array of day numbers in month y/m that fall on p.weekday
+  const dim=new Date(y,m+1,0).getDate();
+  const dates=[];
+  for(let d=1;d<=dim;d++){
+    const jsDay=new Date(y,m,d).getDay(); // 0=Sun..6=Sat
+    const ourDay=jsDay===0?6:jsDay-1; // convert to 0=Mon..6=Sun
+    if(ourDay===p.weekday)dates.push(d);
+  }
+  return dates;
 }
 
 function remainingMonths(p){
@@ -383,16 +376,30 @@ function remainingMonths(p){
   return ei-ci+1;
 }
 
-function status(p,y=CY,m=CM){
-  if(!isActiveInMonth(p,y,m))return'inactive';
-  if(isPaid(p.id,y,m))return'paid';
+function status(p,y=CY,m=CM,occDay=null){
+  const day=occDay!=null?occDay:p.day;
+  if(p.repeat_type!=='weekly'&&!isActiveInMonth(p,y,m))return'inactive';
+  const key=p.repeat_type==='weekly'?pKeyW(p.id,y,m,day):p.id;
+  if(isPaidAny(p,y,m,day))return'paid';
   if(y!==CY||m!==CM)return'upcoming';
-  if(p.day<CD)return'overdue';
-  if(p.day-CD<=7)return'soon';
+  if(day<CD)return'overdue';
+  if(day-CD<=7)return'soon';
   return'upcoming';
 }
 
+function pKeyW(id,y,m,day){return`${id}_${y}_${m}_${day}`}
+
+function isPaidAny(p,y,m,day){
+  if(p.repeat_type==='weekly'){
+    return paidMarks.some(pm=>pm.payment_id===p.id&&pm.year===y&&pm.month===m&&pm.day===day);
+  }
+  return paidMarks.some(pm=>pm.payment_id===p.id&&pm.year===y&&pm.month===m);
+}
+
 function repeatLabel(p){
+  if(p.repeat_type==='weekly'){
+    return`<span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · ${WEEKDAY_FULL[p.weekday]}</span>`;
+  }
   if(p.months===0)return'<span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>';
   const rem=remainingMonths(p);
   if(rem<=0)return'<span class="repeat-tag" style="background:var(--red-bg);color:var(--red-text)"><i class="ti ti-calendar-off" style="font-size:11px"></i> Истёк</span>';
@@ -405,10 +412,13 @@ function statusLabel(s){
   return`<span class="badge ${s}">${map[s]}</span>`;
 }
 
-function cardHTML(p,y=CY,m=CM){
-  const s=status(p,y,m);if(s==='inactive')return'';
-  const dim=new Date(y,m+1,0).getDate(),day=Math.min(p.day,dim);
+function cardHTML(p,y=CY,m=CM,occDay=null){
+  const dim=new Date(y,m+1,0).getDate();
+  const day=occDay!=null?occDay:Math.min(p.day,dim);
+  const s=status(p,y,m,occDay);
+  if(s==='inactive')return'';
   const checkLabel=s==='paid'?'<i class="ti ti-x" style="font-size:13px"></i> Снять':'<i class="ti ti-check" style="font-size:13px"></i> Оплачено';
+  const extendBtn=p.repeat_type==='weekly'?'':`<button class="action-btn" onclick="openExtend('${p.id}')"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>`;
   return`<div class="payment-card ${s}">
     <div class="day-circle ${s}">${day}</div>
     <div class="payment-info">
@@ -416,9 +426,9 @@ function cardHTML(p,y=CY,m=CM){
       <div class="payment-meta">${p.category}${p.note?' · '+p.note:''}</div>
       ${repeatLabel(p)}
       <div class="action-row">
-        <button class="action-btn ${s==='paid'?'uncheck':'check'}" onclick="togglePaid('${p.id}',${y},${m})">${checkLabel}</button>
+        <button class="action-btn ${s==='paid'?'uncheck':'check'}" onclick="togglePaidOcc('${p.id}',${y},${m},${day})">${checkLabel}</button>
         <button class="action-btn" onclick="openEdit('${p.id}')"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
-        <button class="action-btn" onclick="openExtend('${p.id}')"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        ${extendBtn}
         <button class="action-btn" onclick="duplicateP('${p.id}')"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
       </div>
     </div>
@@ -429,19 +439,44 @@ function cardHTML(p,y=CY,m=CM){
   </div>`;
 }
 
+function getMonthOccurrences(p,y,m){
+  // Returns array of {p, day} for this payment in this month
+  if(p.repeat_type==='weekly'){
+    return getWeeklyDatesInMonth(p,y,m).map(d=>({p,day:d}));
+  }
+  if(!isActiveInMonth(p,y,m))return[];
+  const dim=new Date(y,m+1,0).getDate();
+  return[{p,day:Math.min(p.day,dim)}];
+}
+
 function render(){
   document.getElementById('header-month').textContent=MONTHS_RU[CM]+' '+CY;
-  const active=payments.filter(p=>isActiveInMonth(p,CY,CM)).sort((a,b)=>a.day-b.day);
-  const total=active.reduce((s,p)=>s+Number(p.amount),0);
-  const paidN=active.filter(p=>isPaid(p.id,CY,CM)).length;
-  const over=active.filter(p=>status(p)==='overdue').length;
+  let occurrences=[];
+  payments.forEach(p=>{occurrences.push(...getMonthOccurrences(p,CY,CM));});
+  occurrences.sort((a,b)=>a.day-b.day);
+
+  const total=occurrences.reduce((s,o)=>s+Number(o.p.amount),0);
+  const paidN=occurrences.filter(o=>isPaidAny(o.p,CY,CM,o.day)).length;
+  const over=occurrences.filter(o=>status(o.p,CY,CM,o.p.repeat_type==='weekly'?o.day:null)==='overdue').length;
+
   document.getElementById('stats').innerHTML=`
     <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">${total.toLocaleString('ru-RU')} р.</div></div>
-    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">${paidN}/${active.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">${paidN}/${occurrences.length}</div></div>
     <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:${over?'var(--red)':'inherit'}">${over}</div></div>`;
-  const listHTML=active.length?active.map(p=>cardHTML(p)).join(''):`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div><div class="empty-sub">Нажмите «Добавить»</div></div>`;
+
+  const listHTML=occurrences.length?occurrences.map(o=>cardHTML(o.p,CY,CM,o.p.repeat_type==='weekly'?o.day:null)).join(''):`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div><div class="empty-sub">Нажмите «Добавить»</div></div>`;
   document.getElementById('home-list').innerHTML=listHTML;
-  document.getElementById('all-list').innerHTML=[...payments].sort((a,b)=>a.day-b.day).map(p=>cardHTML(p)).join('')||`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div></div>`;
+
+  // All tab: show one card per unique payment (not expanded)
+  const allHTML=[...payments].sort((a,b)=>(a.day||0)-(b.day||0)).map(p=>{
+    if(p.repeat_type==='weekly'){
+      const todayOcc=getWeeklyDatesInMonth(p,CY,CM).find(d=>d>=CD)||getWeeklyDatesInMonth(p,CY,CM)[0];
+      return cardHTML(p,CY,CM,todayOcc);
+    }
+    return cardHTML(p);
+  }).join('');
+  document.getElementById('all-list').innerHTML=allHTML||`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div></div>`;
+
   renderCal();
 }
 
@@ -450,15 +485,17 @@ function renderCal(){
   const first=new Date(calY,calM,1).getDay(),shift=first===0?6:first-1;
   const dim=new Date(calY,calM+1,0).getDate();
   const byDay={};
-  payments.filter(p=>isActiveInMonth(p,calY,calM)).forEach(p=>{const d=Math.min(p.day,dim);(byDay[d]=byDay[d]||[]).push(p);});
+  payments.forEach(p=>{
+    getMonthOccurrences(p,calY,calM).forEach(o=>{(byDay[o.day]=byDay[o.day]||[]).push(o);});
+  });
   let html='';
   for(let i=0;i<shift;i++)html+=`<div class="cal-cell" style="cursor:default"></div>`;
   for(let d=1;d<=dim;d++){
     const isToday=calY===CY&&calM===CM&&d===CD;
-    const ps=byDay[d]||[];
+    const os=byDay[d]||[];
     let dot='';
-    if(ps.length){
-      const ss=ps.map(p=>status(p,calY,calM));
+    if(os.length){
+      const ss=os.map(o=>status(o.p,calY,calM,o.p.repeat_type==='weekly'?o.day:null));
       const pr=ss.includes('overdue')?'overdue':ss.includes('soon')?'soon':ss.includes('upcoming')?'upcoming':'paid';
       dot=`<span class="cal-dot dot-${pr}"></span>`;
     }
@@ -468,14 +505,16 @@ function renderCal(){
 }
 
 function calDetail(day){
-  const dim=new Date(calY,calM+1,0).getDate(),d=Math.min(day,dim);
-  const ps=payments.filter(p=>isActiveInMonth(p,calY,calM)&&Math.min(p.day,dim)===d);
+  let occs=[];
+  payments.forEach(p=>{
+    getMonthOccurrences(p,calY,calM).forEach(o=>{if(o.day===day)occs.push(o);});
+  });
   const mn=MONTHS_GEN[calM];
-  if(!ps.length){
+  if(!occs.length){
     document.getElementById('cal-detail').innerHTML=`<div style="background:var(--bg2);border-radius:var(--radius);padding:14px;display:flex;align-items:center;justify-content:space-between;margin-top:12px"><div style="font-size:14px;color:var(--text2)">Нет платежей ${day} ${mn}</div><button class="add-btn" onclick="openAdd(${day},${calY},${calM})"><i class="ti ti-plus" style="font-size:13px"></i> Добавить</button></div>`;
     return;
   }
-  document.getElementById('cal-detail').innerHTML=`<div class="cal-detail-title">${day} числа</div><div style="text-align:right;margin-bottom:8px"><button class="add-btn" onclick="openAdd(${day},${calY},${calM})"><i class="ti ti-plus" style="font-size:13px"></i> Добавить</button></div><div class="payment-list">${ps.map(p=>cardHTML(p,calY,calM)).join('')}</div>`;
+  document.getElementById('cal-detail').innerHTML=`<div class="cal-detail-title">${day} числа</div><div style="text-align:right;margin-bottom:8px"><button class="add-btn" onclick="openAdd(${day},${calY},${calM})"><i class="ti ti-plus" style="font-size:13px"></i> Добавить</button></div><div class="payment-list">${occs.map(o=>cardHTML(o.p,calY,calM,o.p.repeat_type==='weekly'?o.day:null)).join('')}</div>`;
 }
 
 function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderCal();document.getElementById('cal-detail').innerHTML='';}
@@ -532,6 +571,26 @@ function initPicker(day,sy,sm){
   renderPicker();
 }
 
+// ---- REPEAT TYPE ----
+function setRepeatType(type){
+  repeatType=type;
+  document.getElementById('rtype-monthly').classList.toggle('selected',type==='monthly');
+  document.getElementById('rtype-weekly').classList.toggle('selected',type==='weekly');
+  document.getElementById('weekday-group').style.display=type==='weekly'?'':'none';
+  document.getElementById('datepicker-group').style.display=type==='monthly'?'':'none';
+}
+
+function buildWeekdayGrid(){
+  const el=document.getElementById('weekday-grid');
+  el.innerHTML=WEEKDAY_NAMES.map((name,i)=>`<button type="button" class="month-chip${selectedWeekday===i?' selected':''}" onclick="selectWeekday(${i})">${name}</button>`).join('');
+}
+
+function selectWeekday(i){
+  selectedWeekday=i;
+  buildWeekdayGrid();
+  document.getElementById('weekday-info').textContent='Платёж будет повторяться каждую неделю по '+WEEKDAY_FULL[i];
+}
+
 // ---- MONTHS ----
 function buildMonthsGrid(containerId,currentVal,onChange){
   const el=document.getElementById(containerId);
@@ -562,6 +621,10 @@ function openAdd(day,sy,sm){
   document.getElementById('f-cat').value='Прочее';
   buildMonthsGrid('months-grid',3,'main');
   initPicker(day||null,sy??CY,sm??CM);
+  selectedWeekday=null;
+  buildWeekdayGrid();
+  document.getElementById('weekday-info').textContent='';
+  setRepeatType('monthly');
   updateMonthsInfo();
   document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" id="save-btn" onclick="saveP()">Сохранить</button>`;
   document.getElementById('sheet-bg').classList.add('open');
@@ -577,6 +640,12 @@ function openEdit(id){
   document.getElementById('f-note').value=p.note||'';
   buildMonthsGrid('months-grid',p.months,'main');
   initPicker(p.day,p.start_year,p.start_month);
+  selectedWeekday=p.weekday??null;
+  buildWeekdayGrid();
+  if(p.repeat_type==='weekly'&&p.weekday!=null){
+    document.getElementById('weekday-info').textContent='Платёж будет повторяться каждую неделю по '+WEEKDAY_FULL[p.weekday];
+  }
+  setRepeatType(p.repeat_type||'monthly');
   updateMonthsInfo();
   document.getElementById('sheet-btns').innerHTML=`<button class="sheet-btn del" onclick="delP('${id}')">Удалить</button><button class="sheet-btn cancel" onclick="closeSheet()">Отмена</button><button class="sheet-btn save" id="save-btn" onclick="saveP()">Сохранить</button>`;
   document.getElementById('sheet-bg').classList.add('open');
@@ -590,20 +659,34 @@ function closeSheet(e){
 async function saveP(){
   const name=document.getElementById('f-name').value.trim();
   const amount=parseFloat(document.getElementById('f-amount').value);
-  const day=parseInt(document.getElementById('f-day').value);
   const cat=document.getElementById('f-cat').value;
   const note=document.getElementById('f-note').value.trim();
-  const startYear=parseInt(document.getElementById('f-start-year').value)||CY;
-  const startMonth=parseInt(document.getElementById('f-start-month').value??CM);
-  if(!name||isNaN(amount)||isNaN(day)||day<1||day>31){alert('Заполните название, сумму и выберите дату');return;}
+  if(!name||isNaN(amount)){alert('Заполните название и сумму');return;}
+
+  let payload={name,amount,category:cat,note,months:selectedMonths,repeat_type:repeatType};
+
+  if(repeatType==='weekly'){
+    if(selectedWeekday==null){alert('Выберите день недели');return;}
+    payload.weekday=selectedWeekday;
+    payload.day=1;
+    payload.start_year=CY;
+    payload.start_month=CM;
+  } else {
+    const day=parseInt(document.getElementById('f-day').value);
+    const startYear=parseInt(document.getElementById('f-start-year').value)||CY;
+    const startMonth=parseInt(document.getElementById('f-start-month').value??CM);
+    if(isNaN(day)||day<1||day>31){alert('Выберите дату первого платежа');return;}
+    payload.day=day;payload.start_year=startYear;payload.start_month=startMonth;payload.weekday=null;
+  }
+
   const btn=document.getElementById('save-btn');
   btn.disabled=true;btn.textContent='Сохраняем...';
   try{
     if(editId){
-      await api('PATCH','payments?id=eq.'+editId,{name,amount,day,category:cat,note,months:selectedMonths,start_year:startYear,start_month:startMonth});
+      await api('PATCH','payments?id=eq.'+editId,payload);
       showToast('Платёж обновлён');
     } else {
-      await api('POST','payments',[{name,amount,day,category:cat,note,start_year:startYear,start_month:startMonth,months:selectedMonths}]);
+      await api('POST','payments',[payload]);
       showToast('Платёж добавлен');
     }
     closeSheet();await loadData();
@@ -619,11 +702,17 @@ async function delP(id){
   catch(e){alert('Ошибка удаления');}
 }
 
-async function togglePaid(id,y,m){
-  const already=isPaid(id,y,m);
+async function togglePaidOcc(id,y,m,day){
+  const p=payments.find(x=>x.id===id);if(!p)return;
+  const already=isPaidAny(p,y,m,day);
   try{
-    if(already){await api('DELETE',`paid_marks?payment_id=eq.${id}&year=eq.${y}&month=eq.${m}`);}
-    else{await api('POST','paid_marks',[{payment_id:id,year:y,month:m}]);}
+    if(p.repeat_type==='weekly'){
+      if(already){await api('DELETE',`paid_marks?payment_id=eq.${id}&year=eq.${y}&month=eq.${m}&day=eq.${day}`);}
+      else{await api('POST','paid_marks',[{payment_id:id,year:y,month:m,day:day}]);}
+    } else {
+      if(already){await api('DELETE',`paid_marks?payment_id=eq.${id}&year=eq.${y}&month=eq.${m}`);}
+      else{await api('POST','paid_marks',[{payment_id:id,year:y,month:m}]);}
+    }
     await loadData();
   }catch(e){alert('Ошибка. Проверьте интернет.');}
 }
