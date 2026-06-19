@@ -2,8 +2,9 @@ name: Payment Reminder
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # каждый день в 10:00 по Минску (UTC+3)
-  workflow_dispatch:      # ручной запуск для теста
+    - cron: '0 7 * * *'      # каждый день в 10:00 по Минску — обычная утренняя сводка
+    - cron: '*/30 6-20 * * *' # каждые 30 минут с 9:00 до 23:00 по Минску — проверка дедлайнов
+  workflow_dispatch:          # ручной запуск для теста
 
 jobs:
   notify:
@@ -17,9 +18,22 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Determine run mode
+        id: mode
+        run: |
+          CRON="${{ github.event.schedule }}"
+          if [ "$CRON" = "0 7 * * *" ]; then
+            echo "mode=standard" >> $GITHUB_OUTPUT
+          elif [ "$CRON" = "*/30 6-20 * * *" ]; then
+            echo "mode=deadline" >> $GITHUB_OUTPUT
+          else
+            echo "mode=standard" >> $GITHUB_OUTPUT
+          fi
+
       - name: Send payment reminders
         env:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
+          RUN_MODE: ${{ steps.mode.outputs.mode }}
         run: node .github/scripts/notify.js
