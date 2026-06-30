@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0054)file:///C:/Users/100nout/Downloads/payment_app_v7.html -->
+<html lang="ru" style="--tg-viewport-height: 100vh; --tg-viewport-stable-height: 100vh;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Meduza Crystal — Платежи</title>
 <script>window.Telegram={WebApp:{expand:()=>{},ready:()=>{}}}</script>
-<script src="https://telegram.org/js/telegram-web-app.js" onerror="console.log('TG SDK not available')"></script>
-<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@2.44.0/dist/tabler-icons.min.css">
+<script src="./index_files/telegram-web-app.js.Без названия" onerror="console.log(&#39;TG SDK not available&#39;)"></script>
+<link rel="stylesheet" href="./index_files/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -49,6 +49,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
 .stat-label{font-size:11px;color:var(--text2);margin-bottom:3px}
 .stat-value{font-size:18px;font-weight:600}
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;margin-top:4px}
+#archive-chevron{transition:transform .2s;display:inline-block}
 .section-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.04em}
 .add-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:var(--text);color:var(--bg)}
 .payment-list{display:flex;flex-direction:column;gap:8px}
@@ -152,52 +153,313 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
   <div class="header">
     <div class="header-top">
       <div class="header-title">💳 Платежи</div>
-      <span id="header-month" style="font-size:13px;color:var(--text2)"></span>
+      <span id="header-month" style="font-size:13px;color:var(--text2)">Июнь 2026</span>
     </div>
     <div class="header-sub">Meduza Crystal</div>
   </div>
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('home')">Главная</button>
-    <button class="tab" onclick="switchTab('list')">Все</button>
-    <button class="tab" onclick="switchTab('calendar')">Календарь</button>
+    <button class="tab active" onclick="switchTab(&#39;home&#39;)">Главная</button>
+    <button class="tab" onclick="switchTab(&#39;list&#39;)">Все</button>
+    <button class="tab" onclick="switchTab(&#39;calendar&#39;)">Календарь</button>
   </div>
   <div class="content">
     <div id="tab-home">
-      <div class="sync-indicator"><div class="sync-dot loading" id="sync-dot"></div><span id="sync-text">Загрузка...</span></div>
-      <div class="stats-row" id="stats"></div>
+      <div class="sync-indicator"><div class="sync-dot" id="sync-dot"></div><span id="sync-text">Данные синхронизированы</span></div>
+      <div class="stats-row" id="stats">
+    <div class="stat-card"><div class="stat-label">В месяц</div><div class="stat-value">6&nbsp;901 р.</div></div>
+    <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">9/9</div></div>
+    <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:inherit">0</div></div></div>
       <div class="section-header">
         <span class="section-title">Этот месяц</span>
         <button class="add-btn" onclick="openAdd(null,null,null)"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
       </div>
-      <div class="payment-list" id="home-list"><div style="text-align:center;padding:40px;color:var(--text2)">Загружаем...</div></div>
+      <div class="payment-list" id="home-list"><div class="empty"><i class="ti ti-circle-check" style="color:var(--green)"></i><div class="empty-title">Все платежи оплачены! 🎉</div></div><div style="margin-top:20px"><button class="section-header" style="width:100%;background:none;border:none;cursor:pointer;padding:0" onclick="toggleArchive()">
+      <span class="section-title"><i class="ti ti-archive" style="font-size:13px;margin-right:4px"></i> Архив оплаченных (9) <i class="ti ti-chevron-down" id="archive-chevron" style="font-size:13px"></i></span>
+    </button></div>
+    <div class="payment-list" id="archive-list" style="display:none;margin-top:8px"><div class="payment-card paid">
+    <div class="day-circle paid">5</div>
+    <div class="payment-info">
+      <div class="payment-name">Проверить оплату рекламы</div>
+      <div class="payment-meta">Прочее · Проверить рекламу и деньги на карту на сб-вс</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · пятницам</span><span class="repeat-tag" style="background:var(--purple-bg);color:var(--purple-text)"><i class="ti ti-clock" style="font-size:11px"></i> Дедлайн 16:30</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;,2026,5,5)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        
+        <button class="action-btn" onclick="duplicateP(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;000 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">12</div>
+    <div class="payment-info">
+      <div class="payment-name">Проверить оплату рекламы</div>
+      <div class="payment-meta">Прочее · Проверить рекламу и деньги на карту на сб-вс</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · пятницам</span><span class="repeat-tag" style="background:var(--purple-bg);color:var(--purple-text)"><i class="ti ti-clock" style="font-size:11px"></i> Дедлайн 16:30</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;,2026,5,12)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        
+        <button class="action-btn" onclick="duplicateP(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;000 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">19</div>
+    <div class="payment-info">
+      <div class="payment-name">Проверить оплату рекламы</div>
+      <div class="payment-meta">Прочее · Проверить рекламу и деньги на карту на сб-вс</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · пятницам</span><span class="repeat-tag" style="background:var(--purple-bg);color:var(--purple-text)"><i class="ti ti-clock" style="font-size:11px"></i> Дедлайн 16:30</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;,2026,5,19)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        
+        <button class="action-btn" onclick="duplicateP(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;000 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">20</div>
+    <div class="payment-info">
+      <div class="payment-name">Налоги с зп РБ</div>
+      <div class="payment-meta">Налоги · 20-го числа(написать Анне)</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;,2026,5,20)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">111 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">22</div>
+    <div class="payment-info">
+      <div class="payment-name">Коммуналка 224</div>
+      <div class="payment-meta">Коммуналка · Оплата до 25-го</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;,2026,5,22)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">220 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">22</div>
+    <div class="payment-info">
+      <div class="payment-name">Коммуналка 255</div>
+      <div class="payment-meta">Коммуналка · До 25-го</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;,2026,5,22)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">220 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">26</div>
+    <div class="payment-info">
+      <div class="payment-name">Проверить оплату рекламы</div>
+      <div class="payment-meta">Прочее · Проверить рекламу и деньги на карту на сб-вс</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · пятницам</span><span class="repeat-tag" style="background:var(--purple-bg);color:var(--purple-text)"><i class="ti ti-clock" style="font-size:11px"></i> Дедлайн 16:30</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;,2026,5,26)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        
+        <button class="action-btn" onclick="duplicateP(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;000 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">26</div>
+    <div class="payment-info">
+      <div class="payment-name">Аренда 255</div>
+      <div class="payment-meta">Аренда · С 26 по 30-е</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 6 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;,2026,5,26)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">750 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">27</div>
+    <div class="payment-info">
+      <div class="payment-name">Аренда уручье 174</div>
+      <div class="payment-meta">Аренда · Аренда кв</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 6 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;,2026,5,27)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;600 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div></div></div>
     </div>
     <div id="tab-list" style="display:none">
       <div class="section-header">
         <span class="section-title">Все платежи</span>
         <button class="add-btn" onclick="openAdd(null,null,null)"><i class="ti ti-plus" style="font-size:14px"></i> Добавить</button>
       </div>
-      <div class="payment-list" id="all-list"></div>
+      <div class="payment-list" id="all-list"><div class="payment-card paid">
+    <div class="day-circle paid">5</div>
+    <div class="payment-info">
+      <div class="payment-name">Проверить оплату рекламы</div>
+      <div class="payment-meta">Прочее · Проверить рекламу и деньги на карту на сб-вс</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · пятницам</span><span class="repeat-tag" style="background:var(--purple-bg);color:var(--purple-text)"><i class="ti ti-clock" style="font-size:11px"></i> Дедлайн 16:30</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;,2026,5,5)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        
+        <button class="action-btn" onclick="duplicateP(&#39;032f0cd0-93da-4dce-93b7-0e01cd9f9932&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;000 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">20</div>
+    <div class="payment-info">
+      <div class="payment-name">Налоги с зп РБ</div>
+      <div class="payment-meta">Налоги · 20-го числа(написать Анне)</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;,2026,5,20)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;0f06287f-c073-490f-9e7f-6bbf1874c7e8&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">111 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">22</div>
+    <div class="payment-info">
+      <div class="payment-name">Коммуналка 224</div>
+      <div class="payment-meta">Коммуналка · Оплата до 25-го</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;,2026,5,22)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;5d2577ae-c323-49f4-9bc0-e0090ee7be49&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">220 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">22</div>
+    <div class="payment-info">
+      <div class="payment-name">Коммуналка 255</div>
+      <div class="payment-meta">Коммуналка · До 25-го</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 12 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;,2026,5,22)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;2cdd00a0-7c85-4fc1-9151-854169806773&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">220 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">26</div>
+    <div class="payment-info">
+      <div class="payment-name">Аренда 255</div>
+      <div class="payment-meta">Аренда · С 26 по 30-е</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 6 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;,2026,5,26)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;719115af-9f2c-41c5-a941-0c19859a08f0&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">750 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div><div class="payment-card paid">
+    <div class="day-circle paid">27</div>
+    <div class="payment-info">
+      <div class="payment-name">Аренда уручье 174</div>
+      <div class="payment-meta">Аренда · Аренда кв</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px"><span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Ещё 6 мес.</span></div>
+      <div class="action-row">
+        <button class="action-btn uncheck" onclick="togglePaidOcc(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;,2026,5,27)"><i class="ti ti-x" style="font-size:13px"></i> Снять</button>
+        <button class="action-btn" onclick="openEdit(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;)"><i class="ti ti-edit" style="font-size:13px"></i> Изменить</button>
+        <button class="action-btn" onclick="openExtend(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;)"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>
+        <button class="action-btn" onclick="duplicateP(&#39;0b61c2a7-dddc-4334-a60d-36fdcdc5f7fa&#39;)"><i class="ti ti-copy" style="font-size:13px"></i> Дубль</button>
+      </div>
+    </div>
+    <div class="payment-right">
+      <div class="payment-amount">1&nbsp;600 р.</div>
+      <span class="badge paid">Оплачено</span>
+    </div>
+  </div></div>
     </div>
     <div id="tab-calendar" style="display:none">
       <div class="cal-nav">
         <button class="cal-nav-btn" onclick="calPrev()">←</button>
-        <span class="cal-month" id="cal-month-label"></span>
+        <span class="cal-month" id="cal-month-label">Июнь 2026</span>
         <button class="cal-nav-btn" onclick="calNext()">→</button>
       </div>
       <div class="cal-weekdays">
         <div class="cal-wd">Пн</div><div class="cal-wd">Вт</div><div class="cal-wd">Ср</div>
         <div class="cal-wd">Чт</div><div class="cal-wd">Пт</div><div class="cal-wd">Сб</div><div class="cal-wd">Вс</div>
       </div>
-      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-grid" id="cal-grid"><div class="cal-cell" onclick="calDetail(1)">1</div><div class="cal-cell" onclick="calDetail(2)">2</div><div class="cal-cell" onclick="calDetail(3)">3</div><div class="cal-cell" onclick="calDetail(4)">4</div><div class="cal-cell" onclick="calDetail(5)">5<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(6)">6</div><div class="cal-cell" onclick="calDetail(7)">7</div><div class="cal-cell" onclick="calDetail(8)">8</div><div class="cal-cell" onclick="calDetail(9)">9</div><div class="cal-cell" onclick="calDetail(10)">10</div><div class="cal-cell" onclick="calDetail(11)">11</div><div class="cal-cell" onclick="calDetail(12)">12<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(13)">13</div><div class="cal-cell" onclick="calDetail(14)">14</div><div class="cal-cell" onclick="calDetail(15)">15</div><div class="cal-cell" onclick="calDetail(16)">16</div><div class="cal-cell" onclick="calDetail(17)">17</div><div class="cal-cell" onclick="calDetail(18)">18</div><div class="cal-cell" onclick="calDetail(19)">19<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(20)">20<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(21)">21</div><div class="cal-cell" onclick="calDetail(22)">22<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(23)">23</div><div class="cal-cell" onclick="calDetail(24)">24</div><div class="cal-cell" onclick="calDetail(25)">25</div><div class="cal-cell" onclick="calDetail(26)">26<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(27)">27<span class="cal-dot dot-paid"></span></div><div class="cal-cell" onclick="calDetail(28)">28</div><div class="cal-cell" onclick="calDetail(29)">29</div><div class="cal-cell today" onclick="calDetail(30)">30</div></div>
       <div class="cal-detail" id="cal-detail"></div>
     </div>
   </div>
 </div>
 
 <div class="bottom-nav">
-  <button class="nav-item active" id="nav-home" onclick="switchTab('home')"><i class="ti ti-home"></i>Главная</button>
-  <button class="nav-item" id="nav-list" onclick="switchTab('list')"><i class="ti ti-list"></i>Все</button>
-  <button class="nav-item" id="nav-calendar" onclick="switchTab('calendar')"><i class="ti ti-calendar"></i>Календарь</button>
+  <button class="nav-item active" id="nav-home" onclick="switchTab(&#39;home&#39;)"><i class="ti ti-home"></i>Главная</button>
+  <button class="nav-item" id="nav-list" onclick="switchTab(&#39;list&#39;)"><i class="ti ti-list"></i>Все</button>
+  <button class="nav-item" id="nav-calendar" onclick="switchTab(&#39;calendar&#39;)"><i class="ti ti-calendar"></i>Календарь</button>
 </div>
 
 <!-- Add/Edit Sheet -->
@@ -217,15 +479,15 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-
       <label class="form-label">Категория</label>
       <select class="form-input" id="f-cat">
         <option>Аренда</option><option>Налоги</option><option>Зарплата</option>
-        <option>Реклама</option><option>Поставщики</option><option>Коммуналка</option><option selected>Прочее</option>
+        <option>Реклама</option><option>Поставщики</option><option>Коммуналка</option><option selected="">Прочее</option>
       </select>
     </div>
     <!-- Repeat type toggle -->
     <div class="form-group">
       <label class="form-label">Тип повторения</label>
       <div style="display:flex;gap:8px">
-        <button type="button" class="month-chip" id="rtype-monthly" style="flex:1" onclick="setRepeatType('monthly')">📅 По числу месяца</button>
-        <button type="button" class="month-chip" id="rtype-weekly" style="flex:1" onclick="setRepeatType('weekly')">🔁 По дню недели</button>
+        <button type="button" class="month-chip" id="rtype-monthly" style="flex:1" onclick="setRepeatType(&#39;monthly&#39;)">📅 По числу месяца</button>
+        <button type="button" class="month-chip" id="rtype-weekly" style="flex:1" onclick="setRepeatType(&#39;weekly&#39;)">🔁 По дню недели</button>
       </div>
     </div>
     <!-- Weekday picker (shown when weekly) -->
@@ -318,7 +580,7 @@ const WEEKDAY_NAMES=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
 const WEEKDAY_FULL=['понедельникам','вторникам','средам','четвергам','пятницам','субботам','воскресеньям'];
 
 const MONTH_OPTIONS=[
-  {v:1,label:'1 мес'},{v:2,label:'2 мес'},{v:3,label:'3 мес'},{v:6,label:'6 мес'},
+  {v:-1,label:'Разово',special:true},{v:1,label:'1 мес'},{v:2,label:'2 мес'},{v:3,label:'3 мес'},{v:6,label:'6 мес'},
   {v:12,label:'1 год'},{v:24,label:'2 года'},{v:0,label:'∞ всегда',special:true},
 ];
 
@@ -363,6 +625,7 @@ function isPaid(id,y,m){return paidMarks.some(pm=>pm.payment_id===id&&pm.year===
 
 function isActiveInMonth(p,y,m){
   if(p.repeat_type==='weekly')return true; // weekly payments always active (shown per-occurrence)
+  if(p.months===-1)return p.start_year===y&&p.start_month===m; // разовый платёж — активен только в месяце создания
   if(p.months===0)return true;
   const si=p.start_year*12+p.start_month,ei=si+p.months-1,ci=y*12+m;
   return ci>=si&&ci<=ei;
@@ -381,6 +644,7 @@ function getWeeklyDatesInMonth(p,y,m){
 }
 
 function remainingMonths(p){
+  if(p.months===-1)return 0;
   if(p.months===0)return Infinity;
   const si=p.start_year*12+p.start_month,ei=si+p.months-1,ci=CY*12+CM;
   return ei-ci+1;
@@ -410,6 +674,7 @@ function repeatLabel(p){
   if(p.repeat_type==='weekly'){
     return`<span class="repeat-tag"><i class="ti ti-repeat" style="font-size:11px"></i> Каждую неделю · ${WEEKDAY_FULL[p.weekday]}</span>`;
   }
+  if(p.months===-1)return'<span class="repeat-tag" style="background:var(--blue-bg);color:var(--blue-text)"><i class="ti ti-corner-down-right" style="font-size:11px"></i> Разовый</span>';
   if(p.months===0)return'<span class="repeat-tag"><i class="ti ti-refresh" style="font-size:11px"></i> Бессрочно</span>';
   const rem=remainingMonths(p);
   if(rem<=0)return'<span class="repeat-tag" style="background:var(--red-bg);color:var(--red-text)"><i class="ti ti-calendar-off" style="font-size:11px"></i> Истёк</span>';
@@ -428,7 +693,7 @@ function cardHTML(p,y=CY,m=CM,occDay=null){
   const s=status(p,y,m,occDay);
   if(s==='inactive')return'';
   const checkLabel=s==='paid'?'<i class="ti ti-x" style="font-size:13px"></i> Снять':'<i class="ti ti-check" style="font-size:13px"></i> Оплачено';
-  const extendBtn=p.repeat_type==='weekly'?'':`<button class="action-btn" onclick="openExtend('${p.id}')"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>`;
+  const extendBtn=(p.repeat_type==='weekly'||p.months===-1)?'':`<button class="action-btn" onclick="openExtend('${p.id}')"><i class="ti ti-calendar-plus" style="font-size:13px"></i> Продлить</button>`;
   const reminderBtn=p.deadline_time?`<span class="repeat-tag" style="background:var(--purple-bg);color:var(--purple-text)"><i class="ti ti-clock" style="font-size:11px"></i> Дедлайн ${p.deadline_time}</span>`:'';
   return`<div class="payment-card ${s}">
     <div class="day-circle ${s}">${day}</div>
@@ -464,10 +729,19 @@ function render(){
   document.getElementById('header-month').textContent=MONTHS_RU[CM]+' '+CY;
   let occurrences=[];
   payments.forEach(p=>{occurrences.push(...getMonthOccurrences(p,CY,CM));});
-  occurrences.sort((a,b)=>a.day-b.day);
+
+  // Сортировка: сначала неоплаченные (по дате), затем оплаченные внизу (архив)
+  occurrences.sort((a,b)=>{
+    const aPaid=isPaidAny(a.p,CY,CM,a.day)?1:0;
+    const bPaid=isPaidAny(b.p,CY,CM,b.day)?1:0;
+    if(aPaid!==bPaid)return aPaid-bPaid;
+    return a.day-b.day;
+  });
 
   const total=occurrences.reduce((s,o)=>s+Number(o.p.amount),0);
-  const paidN=occurrences.filter(o=>isPaidAny(o.p,CY,CM,o.day)).length;
+  const paidOccs=occurrences.filter(o=>isPaidAny(o.p,CY,CM,o.day));
+  const unpaidOccs=occurrences.filter(o=>!isPaidAny(o.p,CY,CM,o.day));
+  const paidN=paidOccs.length;
   const over=occurrences.filter(o=>status(o.p,CY,CM,o.p.repeat_type==='weekly'?o.day:null)==='overdue').length;
 
   document.getElementById('stats').innerHTML=`
@@ -475,7 +749,20 @@ function render(){
     <div class="stat-card"><div class="stat-label">Оплачено</div><div class="stat-value" style="color:var(--green)">${paidN}/${occurrences.length}</div></div>
     <div class="stat-card"><div class="stat-label">Просрочено</div><div class="stat-value" style="color:${over?'var(--red)':'inherit'}">${over}</div></div>`;
 
-  const listHTML=occurrences.length?occurrences.map(o=>cardHTML(o.p,CY,CM,o.p.repeat_type==='weekly'?o.day:null)).join(''):`<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div><div class="empty-sub">Нажмите «Добавить»</div></div>`;
+  let listHTML='';
+  if(unpaidOccs.length){
+    listHTML+=unpaidOccs.map(o=>cardHTML(o.p,CY,CM,o.p.repeat_type==='weekly'?o.day:null)).join('');
+  } else if(!occurrences.length){
+    listHTML='<div class="empty"><i class="ti ti-receipt-2"></i><div class="empty-title">Нет платежей</div><div class="empty-sub">Нажмите «Добавить»</div></div>';
+  } else {
+    listHTML='<div class="empty"><i class="ti ti-circle-check" style="color:var(--green)"></i><div class="empty-title">Все платежи оплачены! 🎉</div></div>';
+  }
+  if(paidOccs.length){
+    listHTML+=`<div style="margin-top:20px"><button class="section-header" style="width:100%;background:none;border:none;cursor:pointer;padding:0" onclick="toggleArchive()">
+      <span class="section-title"><i class="ti ti-archive" style="font-size:13px;margin-right:4px"></i> Архив оплаченных (${paidOccs.length}) <i class="ti ti-chevron-down" id="archive-chevron" style="font-size:13px"></i></span>
+    </button></div>
+    <div class="payment-list" id="archive-list" style="display:none;margin-top:8px">${paidOccs.map(o=>cardHTML(o.p,CY,CM,o.p.repeat_type==='weekly'?o.day:null)).join('')}</div>`;
+  }
   document.getElementById('home-list').innerHTML=listHTML;
 
   // All tab: show one card per unique payment (not expanded)
@@ -530,6 +817,15 @@ function calDetail(day){
 
 function calPrev(){calM--;if(calM<0){calM=11;calY--;}renderCal();document.getElementById('cal-detail').innerHTML='';}
 function calNext(){calM++;if(calM>11){calM=0;calY++;}renderCal();document.getElementById('cal-detail').innerHTML='';}
+
+function toggleArchive(){
+  const list=document.getElementById('archive-list');
+  const chev=document.getElementById('archive-chevron');
+  if(!list)return;
+  const isOpen=list.style.display!=='none';
+  list.style.display=isOpen?'none':'';
+  if(chev)chev.style.transform=isOpen?'':'rotate(180deg)';
+}
 
 function switchTab(t){
   ['home','list','calendar'].forEach(x=>{
@@ -624,6 +920,7 @@ function updateMonthsInfo(){
   const el=document.getElementById('months-info');if(!el)return;
   const sy=parseInt(document.getElementById('f-start-year')?.value||CY);
   const sm=parseInt(document.getElementById('f-start-month')?.value??CM);
+  if(selectedMonths===-1){el.textContent='Платёж разовый, не будет повторяться';return;}
   if(selectedMonths===0){el.textContent='Без ограничений по времени';return;}
   const end=new Date(sy,sm+selectedMonths-1,1);
   el.textContent=`С ${MONTHS_GEN[sm]} ${sy} по ${MONTHS_GEN[end.getMonth()]} ${end.getFullYear()}`;
@@ -784,5 +1081,6 @@ function closeExtend(e){
 
 loadData();
 </script>
-</body>
-</html>
+
+
+</body></html>
